@@ -344,10 +344,21 @@ select.xin{ appearance:none; -webkit-appearance:none; background-image:url("data
 <script>
 /* ══════════════════════════════════════════════════════════
    STORAGE (shared with Proton)
+   FIX: LS.set() now returns true/false instead of silently
+   swallowing quota errors, so callers can react when a save
+   (e.g. a profile photo) actually fails to persist.
    ══════════════════════════════════════════════════════════ */
 const LS = {
   get(k, def){ try{ const v = localStorage.getItem('pu_'+k); return v!==null ? JSON.parse(v) : def; }catch{ return def; } },
-  set(k, v){ try{ localStorage.setItem('pu_'+k, JSON.stringify(v)); }catch{} }
+  set(k, v){
+    try{
+      localStorage.setItem('pu_'+k, JSON.stringify(v));
+      return true;
+    }catch(e){
+      console.error('LS.set failed for pu_'+k, e);
+      return false;
+    }
+  }
 };
 
 /* ══════════════════════════════════════════════════════════
@@ -466,14 +477,63 @@ document.getElementById('fabAi').addEventListener('click', ()=>{ window.location
    ══════════════════════════════════════════════════════════ */
 document.getElementById('pfpBtn').addEventListener('click', ()=>{ applyDashboard(); showScreen('profileScreen'); });
 document.getElementById('pfpEditTrigger').addEventListener('click', ()=> document.getElementById('pfpFileInput').click());
-document.getElementById('pfpFileInput').addEventListener('change', (e)=>{
+
+/* ─────────────────────────────────────────────────────────
+   FIX: Photo compression before storage.
+   Root cause of "photo disappears on reload": a raw phone
+   photo encoded as base64 can be several MB, which blows
+   past localStorage's ~5MB per-origin quota. The old code
+   called LS.set() with the raw, uncompressed data URL and
+   LS.set() silently swallowed the QuotaExceededError — the
+   image looked fine on screen (it was rendered straight from
+   memory) but was never actually saved to disk.
+
+   Fix: resize to a small square thumbnail and re-encode as
+   JPEG at moderate quality via canvas, so it reliably fits.
+   Also surface a message to the user if saving still fails,
+   instead of pretending it worked.
+   ───────────────────────────────────────────────────────── */
+function compressImageToDataUrl(file, maxDim = 320, quality = 0.72){
+  return new Promise((resolve, reject)=>{
+    const reader = new FileReader();
+    reader.onerror = ()=> reject(new Error('Could not read file'));
+    reader.onload = ()=>{
+      const img = new Image();
+      img.onerror = ()=> reject(new Error('Could not decode image'));
+      img.onload = ()=>{
+        let { width, height } = img;
+        if(width > height && width > maxDim){
+          height = Math.round(height * (maxDim / width));
+          width = maxDim;
+        } else if(height >= width && height > maxDim){
+          width = Math.round(width * (maxDim / height));
+          height = maxDim;
+        }
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+        resolve(canvas.toDataURL('image/jpeg', quality));
+      };
+      img.src = reader.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+document.getElementById('pfpFileInput').addEventListener('change', async (e)=>{
   const file = e.target.files[0];
   if(!file) return;
-  const reader = new FileReader();
-  reader.onload = ()=>{
-    const dataUrl = reader.result;
-    LS.set('pfp', dataUrl);
-    // Update both images
+  try{
+    const dataUrl = await compressImageToDataUrl(file);
+    const saved = LS.set('pfp', dataUrl);
+    if(!saved){
+      alert("Couldn't save that photo — it may still be too large for this device's storage. Try a different picture.");
+      e.target.value = '';
+      return;
+    }
+    // Update both images only after the save actually succeeded
     document.getElementById('pfpProfileImg').src = dataUrl;
     document.getElementById('pfpTopImg').src = dataUrl;
     document.getElementById('pfpTopImg').style.display = 'block';
@@ -481,9 +541,13 @@ document.getElementById('pfpFileInput').addEventListener('change', (e)=>{
     const btn = document.getElementById('pfpBtn');
     const icon = btn.querySelector('i');
     if(icon) icon.remove();
-  };
-  reader.readAsDataURL(file);
+  }catch(err){
+    console.error('Photo processing failed', err);
+    alert("Something went wrong processing that photo. Please try another.");
+  }
+  e.target.value = '';
 });
+
 document.getElementById('darkToggle').addEventListener('change', (e)=>{ LS.set('dark_mode', e.target.checked); applyTheme(); });
 document.getElementById('logoutBtn').addEventListener('click', ()=>{
   if(!confirm('Log out of this account?')) return;
