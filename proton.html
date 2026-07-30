@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="dark light">
+<meta name="theme-color" content="#000000">
+<title>Proton · 1st PU Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  color-scheme: dark;
+  --bg:#000; --surface:#0a0a0a; --surface-2:#111; --surface-3:#161616;
+  --border:rgba(255,255,255,0.08); --border-strong:rgba(255,255,255,0.16); --border-focus:rgba(255,255,255,0.5);
+  --text-0:#fff; --text-1:#e8e8e8; --text-2:#8a8a8a; --text-3:#454545;
+  --accent:#fff; --danger:#ff453a; --success:#30d158; --warning:#ff9f0a;
+  --font-d:'Space Grotesk',sans-serif; --font-m:'DM Mono',monospace;
+  --r:16px; --r-sm:12px; --r-xs:8px;
+}
+html{ height:100%; }
+body{
+  background:var(--bg); color:var(--text-1); font-family:var(--font-d);
+  height:100vh; height:calc(var(--vh, 1vh) * 100); overflow:hidden; -webkit-font-smoothing:antialiased;
+  display:flex; flex-direction:column; width:100%; max-width:100vw; overflow-x:hidden;
+}
+.icon-btn{ width:38px; height:38px; border-radius:50%; background:var(--surface-2); border:1px solid var(--border); color:var(--text-1); display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:.85rem; transition:.2s; }
+.icon-btn:hover{ border-color:var(--border-strong); }
+.topbar{ display:flex; align-items:center; justify-content:space-between; padding:calc(14px + env(safe-area-inset-top)) 18px 10px; flex-shrink:0; }
+.topbar-title{ display:flex; align-items:center; gap:8px; }
+.topbar-title span{ font-weight:700; font-size:.92rem; letter-spacing:-0.02em; }
+.topbar-title .status-dot{ width:6px;height:6px;border-radius:50%;background:var(--accent);opacity:.6; }
+
+.chat-wrap{ flex:1; overflow-y:auto; padding:8px 16px 12px; scroll-behavior:smooth; }
+.empty-hero{ height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; gap:14px; padding-bottom:10vh; }
+.empty-hero i{ font-size:2rem; color:var(--text-2); }
+.empty-hero .eh-title{ font-size:1.1rem; font-weight:700; letter-spacing:-0.02em; color:var(--text-0); }
+.empty-hero .eh-sub{ font-family:var(--font-m); font-size:.68rem; color:var(--text-3); letter-spacing:.05em; }
+
+.msg-row{ display:flex; margin-bottom:14px; animation:msgIn .25s cubic-bezier(.16,1,.3,1) both; }
+@keyframes msgIn{ from{opacity:0;transform:translateY(6px);} to{opacity:1;transform:translateY(0);} }
+.msg-row.user{ justify-content:flex-end; }
+.msg-bubble{ max-width:82%; padding:12px 16px; border-radius:var(--r-sm); font-size:.86rem; line-height:1.55; }
+.msg-row.user .msg-bubble{ background:var(--text-0); color:var(--bg); border-bottom-right-radius:4px; }
+.msg-row.assistant .msg-bubble{ background:var(--surface-2); border:1px solid var(--border); border-bottom-left-radius:4px; max-width:92%; }
+.msg-row.assistant{ flex-direction:column; align-items:flex-start; }
+.msg-tag{ font-family:var(--font-m); font-size:.5rem; color:var(--text-3); letter-spacing:.15em; text-transform:uppercase; margin:0 2px 5px; }
+
+.chip-row{ display:flex; flex-wrap:wrap; gap:6px; margin-top:10px; }
+.mini-chip{ display:inline-flex; align-items:center; gap:6px; background:transparent; border:1px solid var(--border-strong); border-radius:20px; padding:7px 13px; font-family:var(--font-m); font-size:.62rem; color:var(--text-1); cursor:pointer; transition:.2s; letter-spacing:.03em; }
+.mini-chip:hover{ background:var(--text-0); color:var(--bg); border-color:var(--text-0); }
+
+.chat-card{ background:var(--surface); border:1px solid var(--border); border-radius:var(--r); padding:18px; margin-top:4px; width:100%; max-width:420px; }
+.chat-card-title{ font-size:.82rem; font-weight:700; color:var(--text-0); margin-bottom:14px; letter-spacing:-0.01em; }
+.field-mini-label{ font-family:var(--font-m); font-size:.55rem; color:var(--text-3); letter-spacing:.1em; text-transform:uppercase; margin-bottom:6px; }
+.xin{ width:100%; background:var(--surface-2); border:1px solid var(--border); border-radius:var(--r-xs); padding:11px 13px; color:var(--text-0); font-family:var(--font-d); font-size:16px; font-weight:500; outline:none; transition:.2s; }
+.xin:focus{ border-color:var(--border-focus); }
+.xin::placeholder{ color:var(--text-3); }
+.field-block{ margin-bottom:12px; }
+.btn-solid{ width:100%; background:var(--text-0); color:var(--bg); border:none; border-radius:var(--r-xs); padding:13px; font-family:var(--font-d); font-size:.72rem; font-weight:800; letter-spacing:.1em; text-transform:uppercase; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; transition:.2s; margin-top:6px; }
+.btn-solid:hover{ opacity:.88; }
+
+.result-hero{ text-align:center; padding:4px 0 10px; }
+.result-hero .rh-name{ font-size:1.05rem; font-weight:800; color:var(--text-0); letter-spacing:-0.02em; }
+.result-hero .rh-meta{ font-family:var(--font-m); font-size:.6rem; color:var(--text-3); margin-top:5px; letter-spacing:.04em; }
+.grade-badge{ display:inline-flex; align-items:center; justify-content:center; padding:3px 10px; border-radius:20px; border:1px solid var(--border-strong); font-family:var(--font-m); font-size:.58rem; font-weight:600; color:var(--text-0); margin-top:9px; }
+.stat-row{ display:flex; gap:8px; margin:14px 0; }
+.stat-box{ flex:1; background:var(--surface-2); border:1px solid var(--border); border-radius:var(--r-xs); padding:10px 6px; text-align:center; }
+.stat-box .sb-val{ font-size:1.05rem; font-weight:800; color:var(--text-0); letter-spacing:-0.01em; }
+.stat-box .sb-lbl{ font-family:var(--font-m); font-size:.46rem; color:var(--text-3); letter-spacing:.08em; text-transform:uppercase; margin-top:4px; }
+.marks-table{ border:1px solid var(--border); border-radius:var(--r-xs); overflow:hidden; }
+.marks-row{ display:flex; align-items:center; justify-content:space-between; padding:10px 14px; }
+.marks-row + .marks-row{ border-top:1px solid var(--border); }
+.marks-subj{ font-size:.75rem; font-weight:600; color:var(--text-1); }
+.marks-subj .ms-break{ display:block; font-family:var(--font-m); font-size:.5rem; color:var(--text-3); margin-top:2px; }
+.marks-val{ font-family:var(--font-m); font-size:.75rem; font-weight:600; color:var(--text-0); }
+.marks-val .mv-max{ color:var(--text-3); font-weight:400; }
+.princi-line{ margin-top:12px; padding-top:12px; border-top:1px solid var(--border); font-size:.78rem; line-height:1.55; color:var(--text-1); }
+.princi-line .pl-tag{ font-family:var(--font-m); font-size:.5rem; color:var(--text-3); letter-spacing:.1em; text-transform:uppercase; display:block; margin-bottom:6px; }
+
+.loading-line{ display:flex; align-items:center; gap:10px; }
+.shine-text{ background: linear-gradient(90deg, var(--text-3) 0%, var(--text-0) 50%, var(--text-3) 100%); background-size: 200% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; animation: shineSweep 1.3s linear infinite; }
+@keyframes shineSweep{ 0%{ background-position:200% 0; } 100%{ background-position:-200% 0; } }
+
+.sb-backdrop{ position:fixed; inset:0; background:rgba(0,0,0,.6); z-index:400; opacity:0; pointer-events:none; transition:.25s; }
+.sb-backdrop.open{ opacity:1; pointer-events:all; }
+.sidebar{ position:fixed; top:0; left:-300px; width:280px; height:100vh; height:calc(var(--vh, 1vh) * 100); background:var(--surface); border-right:1px solid var(--border); z-index:401; transition:left .35s cubic-bezier(.16,1,.3,1); display:flex; flex-direction:column; overflow:hidden; }
+.sidebar.open{ left:0; }
+.sb-top{ padding:calc(20px + env(safe-area-inset-top)) 18px 20px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:12px; flex-shrink:0; }
+.sb-blob{ width:42px; height:42px; border-radius:50%; background:var(--text-0); color:var(--bg); display:flex; align-items:center; justify-content:center; font-weight:800; font-size:1.05rem; flex-shrink:0; }
+.sb-name{ font-size:.88rem; font-weight:700; color:var(--text-0); }
+.sb-tag{ font-family:var(--font-m); font-size:.55rem; color:var(--text-3); margin-top:3px; letter-spacing:.08em; }
+.sb-newchat{ margin:14px 18px 6px; padding:11px; border:1px solid var(--border-strong); border-radius:var(--r-xs); display:flex; align-items:center; justify-content:center; gap:8px; cursor:pointer; font-family:var(--font-m); font-size:.65rem; letter-spacing:.06em; color:var(--text-1); transition:.2s; flex-shrink:0; }
+.sb-newchat:hover{ background:var(--text-0); color:var(--bg); border-color:var(--text-0); }
+.sb-section-label{ font-family:var(--font-m); font-size:.52rem; color:var(--text-3); letter-spacing:.15em; text-transform:uppercase; padding:14px 18px 6px; flex-shrink:0; }
+.sb-recent{ flex:1; overflow-y:auto; padding:0 10px; min-height:0; }
+.sb-recent-item{ padding:10px 10px; border-radius:var(--r-xs); cursor:pointer; transition:.15s; margin-bottom:2px; }
+.sb-recent-item:hover{ background:var(--surface-2); }
+.sb-recent-item .rt-title{ font-size:.75rem; font-weight:600; color:var(--text-1); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.sb-recent-item .rt-sub{ font-family:var(--font-m); font-size:.55rem; color:var(--text-3); margin-top:2px; }
+.sb-empty{ padding:20px 18px; font-family:var(--font-m); font-size:.6rem; color:var(--text-3); text-align:center; }
+.sb-footer{ border-top:1px solid var(--border); padding:14px 18px calc(18px + env(safe-area-inset-bottom)); flex-shrink:0; background:var(--surface); }
+.sb-back-link{ display:flex; align-items:center; gap:8px; font-family:var(--font-m); font-size:.65rem; color:var(--text-2); cursor:pointer; transition:.2s; }
+.sb-back-link:hover{ color:var(--text-0); }
+
+.composer-wrap{ flex-shrink:0; padding:8px 14px calc(14px + env(safe-area-inset-bottom)); }
+.pill-row{ display:flex; gap:6px; margin-bottom:8px; overflow-x:auto; padding-bottom:2px; }
+.pill-row::-webkit-scrollbar{ display:none; }
+.cmd-pill{ flex-shrink:0; display:flex; align-items:center; gap:6px; background:var(--surface-2); border:1px solid var(--border-strong); border-radius:20px; padding:8px 14px; font-family:var(--font-m); font-size:.63rem; color:var(--text-1); cursor:pointer; transition:.2s; white-space:nowrap; }
+.cmd-pill:hover{ background:var(--text-0); color:var(--bg); border-color:var(--text-0); }
+.composer-box{ background:var(--surface-2); border:1px solid var(--border); border-radius:24px; padding:10px 8px 10px 18px; display:flex; align-items:flex-end; gap:8px; }
+.composer-input{ flex:1; background:none; border:none; outline:none; resize:none; color:var(--text-0); font-family:var(--font-d); font-size:16px; max-height:100px; padding:8px 0; line-height:1.4; }
+.composer-input::placeholder{ color:var(--text-3); }
+.send-btn{ width:36px; height:36px; border-radius:50%; background:var(--text-0); color:var(--bg); border:none; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:.85rem; transition:.2s; flex-shrink:0; }
+.send-btn:hover{ opacity:.85; }
+@media(max-width:420px){ .msg-bubble{ max-width:90%; } .chat-card{ max-width:100%; } }
+</style>
+</head>
+<body>
+
+<div class="sb-backdrop" id="sbBackdrop"></div>
+<div class="sidebar" id="sidebar">
+  <div class="sb-top">
+    <div class="sb-blob" id="sbBlob">?</div>
+    <div><div class="sb-name" id="sbName">Student</div><div class="sb-tag">1st PU · Proton</div></div>
+  </div>
+  <div class="sb-newchat" id="sbNewChat"><i class="fa-solid fa-plus"></i> New chat</div>
+  <div class="sb-section-label">Recent chats</div>
+  <div class="sb-recent" id="sbRecent"></div>
+  <div class="sb-footer"><div class="sb-back-link" id="sbBackLink"><i class="fa-solid fa-arrow-left"></i> Back to portal</div></div>
+</div>
+
+<div class="topbar">
+  <button class="icon-btn" id="menuBtn"><i class="fa-solid fa-bars-staggered"></i></button>
+  <div class="topbar-title"><span>Proton</span><span class="status-dot"></span></div>
+  <button class="icon-btn" id="newChatTopBtn"><i class="fa-regular fa-pen-to-square"></i></button>
+</div>
+
+<div class="chat-wrap" id="chatWrap">
+  <div class="empty-hero" id="emptyHero">
+    <i class="fa-solid fa-wand-magic-sparkles"></i>
+    <div class="eh-title" id="heroGreeting">Hey there</div>
+    <div class="eh-sub">Pick NEET/JEE, KCET, or Boards to check a result</div>
+  </div>
+  <div id="chatBody" style="display:none;"></div>
+</div>
+
+<div class="composer-wrap">
+  <div class="pill-row">
+    <div class="cmd-pill" data-cat="jee"><i class="fa-solid fa-award"></i> NEET / JEE</div>
+    <div class="cmd-pill" data-cat="kcet"><i class="fa-solid fa-award"></i> KCET</div>
+    <div class="cmd-pill" data-cat="boards"><i class="fa-solid fa-award"></i> Boards</div>
+  </div>
+  <div class="composer-box">
+    <textarea class="composer-input" id="composerInput" placeholder="Message Proton…" rows="1"></textarea>
+    <button class="send-btn" id="sendBtn"><i class="fa-solid fa-arrow-up"></i></button>
+  </div>
+</div>
+
+<script>
+const LS = {
+  get(k, def){ try{ const v = localStorage.getItem('pu_'+k); return v!==null ? JSON.parse(v) : def; }catch{ return def; } },
+  set(k, v){ try{ localStorage.setItem('pu_'+k, JSON.stringify(v)); }catch{} }
+};
+const session = LS.get('session', null);
+
+function applyIdentity(){
+  const name = session ? session.name : 'Student';
+  document.getElementById('sbBlob').textContent = name.charAt(0).toUpperCase();
+  document.getElementById('sbName').textContent = name;
+  const hr = new Date().getHours();
+  const greet = hr < 12 ? 'good morning' : hr < 17 ? 'good afternoon' : 'good evening';
+  document.getElementById('heroGreeting').textContent = session ? `Hey ${name.split(' ')[0]}, ${greet}` : `Hey there, ${greet}`;
+}
+applyIdentity();
+document.getElementById('sbBackLink').addEventListener('click', ()=>{ window.location.href = './index.html'; });
+
+const sidebar = document.getElementById('sidebar');
+const backdrop = document.getElementById('sbBackdrop');
+document.getElementById('menuBtn').addEventListener('click', ()=>{ sidebar.classList.add('open'); backdrop.classList.add('open'); renderRecentChats(); });
+backdrop.addEventListener('click', ()=>{ sidebar.classList.remove('open'); backdrop.classList.remove('open'); });
+document.getElementById('sbNewChat').addEventListener('click', startNewChat);
+document.getElementById('newChatTopBtn').addEventListener('click', startNewChat);
+
+let currentChatId = null, currentChatMessages = [];
+function startNewChat(){
+  saveCurrentChat();
+  currentChatId = 'c_' + Date.now();
+  currentChatMessages = [];
+  document.getElementById('chatBody').innerHTML = '';
+  document.getElementById('chatBody').style.display = 'none';
+  document.getElementById('emptyHero').style.display = 'flex';
+  sidebar.classList.remove('open'); backdrop.classList.remove('open');
+  resultFlowState = null;
+}
+function saveCurrentChat(){
+  if(!currentChatId || currentChatMessages.length===0) return;
+  const all = LS.get('chats', {});
+  const firstUserMsg = currentChatMessages.find(m=>m.role==='user');
+  all[currentChatId] = { id: currentChatId, title: firstUserMsg ? firstUserMsg.plain.slice(0,42) : 'New chat', updatedAt: Date.now(), messages: currentChatMessages };
+  LS.set('chats', all);
+}
+function renderRecentChats(){
+  const container = document.getElementById('sbRecent');
+  const all = LS.get('chats', {});
+  const list = Object.values(all).sort((a,b)=>b.updatedAt-a.updatedAt);
+  if(!list.length){ container.innerHTML = '<div class="sb-empty">No chats yet</div>'; return; }
+  container.innerHTML = list.map(c => {
+    const date = new Date(c.updatedAt).toLocaleDateString('en-IN',{day:'numeric',month:'short'});
+    return `<div class="sb-recent-item" data-id="${c.id}"><div class="rt-title">${escapeHtml(c.title||'New chat')}</div><div class="rt-sub">${date}</div></div>`;
+  }).join('');
+  container.querySelectorAll('.sb-recent-item[data-id]').forEach(el=>{ el.addEventListener('click', ()=> loadChat(el.getAttribute('data-id'))); });
+}
+function loadChat(id){
+  const all = LS.get('chats', {});
+  const chat = all[id]; if(!chat) return;
+  saveCurrentChat();
+  currentChatId = chat.id; currentChatMessages = chat.messages;
+  const body = document.getElementById('chatBody'); body.innerHTML = '';
+  chat.messages.forEach(m => appendRawBubble(m.role, m.html));
+  body.style.display = 'block';
+  document.getElementById('emptyHero').style.display = 'none';
+  sidebar.classList.remove('open'); backdrop.classList.remove('open');
+  document.getElementById('chatWrap').scrollTop = document.getElementById('chatWrap').scrollHeight;
+}
+
+function escapeHtml(str){ if(!str) return ''; return str.replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+function loadingLine(text){ return `<div class="loading-line"><span class="shine-text">${escapeHtml(text)}</span></div>`; }
+function appendRawBubble(role, html){
+  document.getElementById('emptyHero').style.display = 'none';
+  const body = document.getElementById('chatBody'); body.style.display = 'block';
+  const row = document.createElement('div');
+  row.className = 'msg-row ' + role;
+  row.innerHTML = role === 'assistant' ? `<div class="msg-tag">PROTON</div><div class="msg-bubble">${html}</div>` : `<div class="msg-bubble">${html}</div>`;
+  body.appendChild(row);
+  document.getElementById('chatWrap').scrollTop = document.getElementById('chatWrap').scrollHeight;
+  return row;
+}
+function pushMessage(role, html, plain){
+  if(!currentChatId) currentChatId = 'c_' + Date.now();
+  currentChatMessages.push({ role, html, plain: plain || html.replace(/<[^>]+>/g,'').trim(), ts: Date.now() });
+  const row = appendRawBubble(role, html);
+  saveCurrentChat();
+  return row;
+}
+function userSays(text){ pushMessage('user', escapeHtml(text), text); }
+function protonSays(html, plain){ return pushMessage('assistant', html, plain); }
+function sleep(ms){ return new Promise(res=>setTimeout(res, ms)); }
+function showTempThinking(){
+  document.getElementById('emptyHero').style.display='none';
+  const body = document.getElementById('chatBody'); body.style.display='block';
+  const row = document.createElement('div');
+  row.className = 'msg-row assistant';
+  row.innerHTML = `<div class="msg-tag">PROTON</div><div class="msg-bubble">${loadingLine('Thinking…')}</div>`;
+  body.appendChild(row);
+  document.getElementById('chatWrap').scrollTop = document.getElementById('chatWrap').scrollHeight;
+  return row;
+}
+
+/* ══════ CATEGORY / RESULT FLOW ══════ */
+const dataCache = {};
+function loadJson(file){
+  if(file in dataCache) return Promise.resolve(dataCache[file]);
+  return fetch(file).then(r=>{ if(!r.ok) throw new Error('missing'); return r.json(); })
+    .then(d=>{ dataCache[file]=d; return d; }).catch(()=>{ dataCache[file]=null; return null; });
+}
+const CATEGORY_FILES = { jee: './jee1pu.json', kcet: './kcet1pu.json', boards: './boards1pu.json' };
+const CATEGORY_LABELS = { jee: 'NEET / JEE', kcet: 'KCET', boards: 'Boards' };
+let resultFlowState = null;
+
+async function startCategoryFlow(category){
+  protonSays(loadingLine(`Looking up ${CATEGORY_LABELS[category]} exams…`));
+  const rows = document.getElementById('chatBody');
+  const loadingRow = rows.lastElementChild;
+  const data = await loadJson(CATEGORY_FILES[category]);
+  loadingRow.remove();
+  if(!data || !data.exams || !data.exams.length){
+    protonSays(`<i class="fa-regular fa-folder-open"></i> No ${CATEGORY_LABELS[category]} results published yet. Check back soon.`);
+    return;
+  }
+  const html = `Which ${CATEGORY_LABELS[category]} test would you like to check?
+    <div class="chip-row">
+      ${data.exams.map(ex=>`<div class="mini-chip" data-code="${ex.code}"><i class="fa-solid fa-file-lines"></i> ${ex.shortName}</div>`).join('')}
+    </div>`;
+  const row = protonSays(html, `Which ${CATEGORY_LABELS[category]} test would you like to check?`);
+  row.querySelectorAll('[data-code]').forEach(chip=>{
+    chip.addEventListener('click', ()=>{
+      const exam = data.exams.find(e=>e.code===chip.getAttribute('data-code'));
+      userSays(exam.shortName);
+      askForRoll(exam);
+    });
+  });
+}
+
+function askForRoll(exam){
+  resultFlowState = { exam };
+  const savedRoll = LS.get('last_roll_search', session ? session.rollNo : '');
+  const cardId = 'rollcard_' + Date.now();
+  const html = `
+    <div class="chat-card" id="${cardId}">
+      <div class="chat-card-title">Enter your roll number for ${escapeHtml(exam.shortName)}</div>
+      <div class="field-block">
+        <div class="field-mini-label">Roll number</div>
+        <input type="text" class="xin" id="${cardId}_input" placeholder="e.g. XOS-001" value="${escapeHtml(savedRoll||'')}">
+      </div>
+      <button class="btn-solid" data-action="submit-roll"><i class="fa-solid fa-magnifying-glass"></i> Check Result</button>
+    </div>`;
+  const row = protonSays(html, `Enter your roll number for ${exam.shortName}`);
+  const card = row.querySelector('.chat-card');
+  const input = card.querySelector('input');
+  const submit = ()=>{ const roll = input.value.trim(); if(!roll) return; userSays(roll); fetchAndRenderResult(exam, roll); };
+  card.querySelector('[data-action="submit-roll"]').addEventListener('click', submit);
+  input.addEventListener('keydown', e=>{ if(e.key==='Enter') submit(); });
+}
+
+async function fetchAndRenderResult(exam, roll){
+  LS.set('last_roll_search', roll);
+  protonSays(loadingLine(`Fetching ${exam.shortName} result…`));
+  const rows = document.getElementById('chatBody');
+  const loadingRow = rows.lastElementChild;
+  try{
+    const res = await fetch(`./${exam.resultsFile}`);
+    if(!res.ok) throw new Error('missing');
+    const data = await res.json();
+    const record = data.results.find(r => r.rollNo.toLowerCase() === roll.toLowerCase());
+    loadingRow.remove();
+    if(!record){
+      protonSays(`<i class="fa-solid fa-triangle-exclamation"></i> No result found for roll number <b>${escapeHtml(roll)}</b> in ${exam.shortName}. Double-check the roll number and try again.`);
+      return;
+    }
+    await renderResultCard(data, record, exam);
+    resultFlowState = null;
+  }catch(e){
+    loadingRow.remove();
+    protonSays(`<i class="fa-solid fa-triangle-exclamation"></i> Couldn't load ${exam.shortName} results right now.`);
+  }
+}
+
+function subjLabel(s){ return s.charAt(0)+s.slice(1).toLowerCase(); }
+async function renderResultCard(dataset, record, exam){
+  let princiHtml = '';
+  if(exam.princiMsgFile){
+    const msgs = await loadJson(exam.princiMsgFile);
+    if(msgs && msgs.messages){
+      const found = msgs.messages.find(m => m.rollNo.toLowerCase()===record.rollNo.toLowerCase() && m.pdf===exam.pdfName);
+      if(found){
+        princiHtml = `<div class="princi-line"><span class="pl-tag"><i class="fa-solid fa-comment-dots"></i> Principal's remark</span>${escapeHtml(found.message)}</div>`;
+      }
+    }
+  }
+  const html = `
+    <div class="result-hero">
+      <div class="rh-name">${escapeHtml(record.name)}</div>
+      <div class="rh-meta">${escapeHtml(record.rollNo)} · ${escapeHtml(exam.displayName)}</div>
+      <div class="grade-badge">Grade ${escapeHtml(record.grade)}</div>
+    </div>
+    <div class="stat-row">
+      <div class="stat-box"><div class="sb-val">${record.total}</div><div class="sb-lbl">Total</div></div>
+      <div class="stat-box"><div class="sb-val">${record.percentage}%</div><div class="sb-lbl">Percent</div></div>
+      <div class="stat-box"><div class="sb-val">#${record.rank}</div><div class="sb-lbl">Rank</div></div>
+    </div>
+    <div class="marks-table">
+      ${dataset.subjects.map(subj => {
+        const m = record.marks[subj];
+        const breakdown = (m && typeof m === 'object') ? `<span class="ms-break">+${m.positive} / -${m.negative}</span>` : '';
+        const total = (m && typeof m === 'object') ? m.total : m;
+        return `<div class="marks-row"><div class="marks-subj">${subjLabel(subj)}${breakdown}</div><div class="marks-val">${total} <span class="mv-max">/ ${dataset.maxPerSubject}</span></div></div>`;
+      }).join('')}
+    </div>
+    ${princiHtml}`;
+  protonSays(html, `${record.name} · ${exam.shortName} · Total ${record.total} · Rank #${record.rank}`);
+}
+
+/* ══════ INTENT PARSING (free-text) ══════ */
+async function tryParseResultIntent(text){
+  const t = text.toLowerCase();
+  let category = null;
+  if(/neet|jee/.test(t)) category = 'jee';
+  else if(/kcet/.test(t)) category = 'kcet';
+  else if(/board/.test(t)) category = 'boards';
+  if(!category && !/result|marks|score/.test(t)) return false;
+  category = category || 'jee';
+  try{
+    const data = await loadJson(CATEGORY_FILES[category]);
+    if(data && data.exams){
+      for(const ex of data.exams){
+        const codeRe = new RegExp('\\b' + ex.code.toLowerCase() + '\\b');
+        if(codeRe.test(t)){ askForRoll(ex); return true; }
+      }
+    }
+    await startCategoryFlow(category);
+    return true;
+  }catch(e){ return false; }
+}
+
+/* ══════ NORMAL CHAT — trainingset.json Jaccard nearest-neighbor ══════ */
+let chatTrainingSet = [];
+async function loadTrainingData(){
+  try{
+    const r = await fetch('./trainingset.json');
+    if(!r.ok) throw new Error('HTTP ' + r.status);
+    chatTrainingSet = await r.json();
+    chatTrainingSet.forEach(ex => ex._tokens = new Set(tokenize(ex.input)));
+  }catch(e){ chatTrainingSet = []; }
+}
+function normalizeText(s){ return s.toLowerCase().replace(/[^\w\s%.]/g,' ').replace(/\s+/g,' ').trim(); }
+function tokenize(s){ return normalizeText(s).split(' ').filter(Boolean); }
+function jaccard(a, b){ let inter=0; for(const t of a) if(b.has(t)) inter++; const union=a.size+b.size-inter; return union?inter/union:0; }
+function classifyChat(text){
+  if(!chatTrainingSet.length) return null;
+  const q = new Set(tokenize(text));
+  if(!q.size) return null;
+  let best=null, bestScore=0;
+  for(const ex of chatTrainingSet){ const sc = jaccard(q, ex._tokens); if(sc > bestScore){ bestScore = sc; best = ex; } }
+  return best && bestScore > 0.3 ? best : null;
+}
+
+/* ══════ MAIN ROUTER ══════ */
+async function handleSmartMessage(rawText){
+  if(resultFlowState && resultFlowState.exam && /^[a-z0-9\-]{3,15}$/i.test(rawText.trim())){
+    fetchAndRenderResult(resultFlowState.exam, rawText.trim());
+    return;
+  }
+  const thinkingRow = showTempThinking();
+  await sleep(400);
+  thinkingRow.remove();
+  const handled = await tryParseResultIntent(rawText);
+  if(handled) return;
+  const chatGuess = classifyChat(rawText);
+  if(chatGuess){ protonSays(escapeHtml(chatGuess.output)); return; }
+  protonSays(`I can check your NEET/JEE, KCET, or Boards result — tap a pill above, or just type something like "jee pt1 result". 🙂`);
+}
+
+function initComposer(){
+  const input = document.getElementById('composerInput');
+  const sendBtn = document.getElementById('sendBtn');
+  input.addEventListener('input', ()=>{ input.style.height='auto'; input.style.height=Math.min(100,input.scrollHeight)+'px'; });
+  function send(){
+    const text = input.value.trim(); if(!text) return;
+    userSays(text); input.value=''; input.style.height='auto';
+    handleSmartMessage(text);
+  }
+  sendBtn.addEventListener('click', send);
+  input.addEventListener('keydown', e=>{ if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); send(); } });
+  document.querySelectorAll('.cmd-pill[data-cat]').forEach(pill=>{
+    pill.addEventListener('click', ()=>{
+      const cat = pill.getAttribute('data-cat');
+      userSays(CATEGORY_LABELS[cat]);
+      startCategoryFlow(cat);
+    });
+  });
+}
+
+function setVH(){ const vh=(window.visualViewport?window.visualViewport.height:window.innerHeight)*0.01; document.documentElement.style.setProperty('--vh', vh+'px'); }
+setVH(); window.addEventListener('resize', setVH); window.addEventListener('orientationchange', ()=>setTimeout(setVH,100));
+if(window.visualViewport){ window.visualViewport.addEventListener('resize', setVH); window.visualViewport.addEventListener('scroll', setVH); }
+
+initComposer();
+loadTrainingData();
+currentChatId = 'c_' + Date.now();
+</script>
+</body>
+</html>
