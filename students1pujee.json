@@ -1,0 +1,14 @@
+{
+  "students": [
+    { "rollNo": "XOS-001", "name": "Nikhil B" },
+    { "rollNo": "XOS-002", "name": "Aarav Sharma" },
+    { "rollNo": "XOS-003", "name": "Ananya Rao" },
+    { "rollNo": "XOS-004", "name": "Darshan K." },
+    { "rollNo": "XOS-005", "name": "Kavya Hegde" },
+    { "rollNo": "XOS-006", "name": "Manish Gowda" },
+    { "rollNo": "XOS-007", "name": "Meghana Shetty" },
+    { "rollNo": "XOS-008", "name": "Pruthvi Raj" },
+    { "rollNo": "XOS-009", "name": "Sneha Patil" },
+    { "rollNo": "XOS-010", "name": "Varun Nayak" }
+  ]
+}
