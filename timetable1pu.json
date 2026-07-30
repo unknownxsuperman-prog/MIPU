@@ -1,0 +1,8 @@
+{
+  "events": [
+    { "title": "1st PU JEE Part Test 2", "type": "Part Test", "date": "2026-08-03", "tag": "This Week" },
+    { "title": "Chemistry Unit Test", "type": "Unit Test", "date": "2026-08-05", "tag": "This Week" },
+    { "title": "KCET Mock Round 1", "type": "Mock Exam", "date": "2026-08-15", "tag": null },
+    { "title": "Boards Preparatory Test 1", "type": "Prep Test", "date": "2026-08-22", "tag": null }
+  ]
+}
