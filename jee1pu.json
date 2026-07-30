@@ -1,0 +1,16 @@
+{
+  "exams": [
+    {
+      "code": "PT1",
+      "shortName": "Part Test 1",
+      "displayName": "1st PU JEE Part Test 1",
+      "pdfName": "1pujeeparttest1.pdf",
+      "date": "2026-07-30",
+      "subjects": ["PHYSICS", "CHEMISTRY", "MATHS"],
+      "maxMarksPerSubject": 100,
+      "markingScheme": "JEE Main (+4 / -1)",
+      "resultsFile": "results_1pujeeparttest1.json",
+      "princiMsgFile": "./princimsgpu1jee.json"
+    }
+  ]
+}
