@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
-    <meta name="color-scheme" content="dark light">
-    <meta name="theme-color" content="#000000">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover" />
+    <meta name="color-scheme" content="dark light" />
+    <meta name="theme-color" content="#000000" />
     <title>1st PU · Result Portal</title>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
         *,
@@ -335,7 +335,7 @@
             border-radius: 20px;
         }
 
-        /* ═══ FAB ═══ */
+        /* ═══ FAB (floating AI) ═══ */
         .fab-ai {
             position: fixed;
             right: 20px;
@@ -352,9 +352,17 @@
             box-shadow: 0 8px 24px rgba(0, 0, 0, .35);
             z-index: 100;
             transition: .2s;
+            overflow: hidden;
+            padding: 0;
         }
         .fab-ai:hover {
             transform: scale(1.05);
+        }
+        .fab-ai img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
         }
         .fab-ai i {
             color: var(--bg);
@@ -813,7 +821,9 @@
     <!-- ═══════════════ DASHBOARD ═══════════════ -->
     <div class="screen" id="dashboardScreen">
         <div class="topbar">
-            <button class="icon-btn" id="pfpBtn"><img src="./student.png" id="pfpTopImg" onerror="this.style.display='none';this.parentElement.innerHTML='<i class=\'fa-solid fa-user\'></i>';"></button>
+            <button class="icon-btn" id="pfpBtn">
+                <img src="./student.png" id="pfpTopImg" onerror="this.style.display='none';this.parentElement.innerHTML='<i class=\'fa-solid fa-user\'></i>';">
+            </button>
             <div class="topbar-title"><span>1st PU Portal</span></div>
             <button class="icon-btn" style="visibility:hidden;"><i class="fa-solid fa-bars"></i></button>
         </div>
@@ -840,7 +850,10 @@
                 <div class="ac-arrow"><i class="fa-solid fa-chevron-right"></i></div>
             </div>
         </div>
-        <button class="fab-ai" id="fabAi"><i class="fa-solid fa-wand-magic-sparkles"></i></button>
+        <!-- Floating AI button with logo.svg, cropped to circle -->
+        <button class="fab-ai" id="fabAi">
+            <img src="./logo.svg" alt="AI" onerror="this.style.display='none';this.parentElement.innerHTML='<i class=\'fa-solid fa-wand-magic-sparkles\'></i>';" />
+        </button>
     </div>
 
     <!-- ═══════════════ PROFILE OVERLAY ═══════════════ -->
@@ -1041,16 +1054,18 @@
             // Profile info
             document.getElementById('profileNameDisplay').textContent = s.name;
             document.getElementById('profileRollDisplay').textContent = `${s.rollNo} · ${s.year==='2'?'2nd':'1st'} PU`;
-            // PFP
+            // PFP – load from localStorage
             const pfp = LS.get('pfp', null);
             if (pfp) {
                 document.getElementById('pfpTopImg').src = pfp;
-                const pi = document.getElementById('pfpProfileImg');
-                if (pi) pi.src = pfp;
+                document.getElementById('pfpProfileImg').src = pfp;
+            } else {
+                // fallback to default student.png (already set in HTML)
             }
         }
         document.getElementById('checkResultBtn').addEventListener('click', () => openExamSelect());
         document.getElementById('timetableBtn').addEventListener('click', () => openTimetable());
+        // Floating AI button – navigate to proton.html (or your AI page)
         document.getElementById('fabAi').addEventListener('click', () => { window.location.href = './proton.html'; });
 
         /* ══════════════════════════════════════════════════════════
@@ -1067,9 +1082,10 @@
             if (!file) return;
             const reader = new FileReader();
             reader.onload = () => {
-                LS.set('pfp', reader.result);
-                document.getElementById('pfpProfileImg').src = reader.result;
-                document.getElementById('pfpTopImg').src = reader.result;
+                const dataUrl = reader.result;
+                LS.set('pfp', dataUrl);
+                document.getElementById('pfpProfileImg').src = dataUrl;
+                document.getElementById('pfpTopImg').src = dataUrl;
             };
             reader.readAsDataURL(file);
         });
