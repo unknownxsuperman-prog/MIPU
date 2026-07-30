@@ -166,9 +166,23 @@ body{
 
 <script>
 // ─── localStorage helpers ───────────────────────────────────────────────
+// FIX: LS.set() now returns true/false instead of silently swallowing
+// quota errors (kept consistent with index.html, which is where photos
+// are actually saved). Proton itself never writes 'pfp', only reads it,
+// so this change is for consistency/debuggability rather than the fix
+// itself — but if you ever add a photo-set flow here too, failures will
+// now be visible instead of silently disappearing on reload.
 const LS = {
   get(k, def){ try{ const v = localStorage.getItem('pu_'+k); return v!==null ? JSON.parse(v) : def; }catch{ return def; } },
-  set(k, v){ try{ localStorage.setItem('pu_'+k, JSON.stringify(v)); }catch{} }
+  set(k, v){
+    try{
+      localStorage.setItem('pu_'+k, JSON.stringify(v));
+      return true;
+    }catch(e){
+      console.error('LS.set failed for pu_'+k, e);
+      return false;
+    }
+  }
 };
 
 // ─── session & identity ──────────────────────────────────────────────────
