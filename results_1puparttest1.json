@@ -1,0 +1,263 @@
+{
+  "examCode": "PT1",
+  "subjects": [
+    "PHYSICS",
+    "CHEMISTRY",
+    "MATHS"
+  ],
+  "maxPerSubject": 100,
+  "maxTotal": 300,
+  "markingScheme": "positive_negative",
+  "results": [
+    {
+      "rollNo": "XOS-003",
+      "name": "Ananya Rao",
+      "marks": {
+        "PHYSICS": {
+          "positive": 100,
+          "negative": 0,
+          "total": 100
+        },
+        "CHEMISTRY": {
+          "positive": 96,
+          "negative": 1,
+          "total": 95
+        },
+        "MATHS": {
+          "positive": 92,
+          "negative": 2,
+          "total": 90
+        }
+      },
+      "total": 285,
+      "percentage": 95.0,
+      "rank": 1,
+      "grade": "A+"
+    },
+    {
+      "rollNo": "XOS-002",
+      "name": "Aarav Sharma",
+      "marks": {
+        "PHYSICS": {
+          "positive": 96,
+          "negative": 1,
+          "total": 95
+        },
+        "CHEMISTRY": {
+          "positive": 88,
+          "negative": 3,
+          "total": 85
+        },
+        "MATHS": {
+          "positive": 84,
+          "negative": 2,
+          "total": 82
+        }
+      },
+      "total": 262,
+      "percentage": 87.33,
+      "rank": 2,
+      "grade": "A"
+    },
+    {
+      "rollNo": "XOS-009",
+      "name": "Sneha Patil",
+      "marks": {
+        "PHYSICS": {
+          "positive": 92,
+          "negative": 2,
+          "total": 90
+        },
+        "CHEMISTRY": {
+          "positive": 92,
+          "negative": 1,
+          "total": 91
+        },
+        "MATHS": {
+          "positive": 88,
+          "negative": 2,
+          "total": 86
+        }
+      },
+      "total": 267,
+      "percentage": 89.0,
+      "rank": 3,
+      "grade": "A"
+    },
+    {
+      "rollNo": "XOS-001",
+      "name": "Nikhil B",
+      "marks": {
+        "PHYSICS": {
+          "positive": 88,
+          "negative": 2,
+          "total": 86
+        },
+        "CHEMISTRY": {
+          "positive": 92,
+          "negative": 1,
+          "total": 91
+        },
+        "MATHS": {
+          "positive": 80,
+          "negative": 4,
+          "total": 76
+        }
+      },
+      "total": 253,
+      "percentage": 84.33,
+      "rank": 4,
+      "grade": "A"
+    },
+    {
+      "rollNo": "XOS-005",
+      "name": "Kavya Hegde",
+      "marks": {
+        "PHYSICS": {
+          "positive": 84,
+          "negative": 3,
+          "total": 81
+        },
+        "CHEMISTRY": {
+          "positive": 88,
+          "negative": 2,
+          "total": 86
+        },
+        "MATHS": {
+          "positive": 76,
+          "negative": 4,
+          "total": 72
+        }
+      },
+      "total": 239,
+      "percentage": 79.67,
+      "rank": 5,
+      "grade": "B+"
+    },
+    {
+      "rollNo": "XOS-007",
+      "name": "Meghana Shetty",
+      "marks": {
+        "PHYSICS": {
+          "positive": 80,
+          "negative": 3,
+          "total": 77
+        },
+        "CHEMISTRY": {
+          "positive": 84,
+          "negative": 2,
+          "total": 82
+        },
+        "MATHS": {
+          "positive": 72,
+          "negative": 3,
+          "total": 69
+        }
+      },
+      "total": 228,
+      "percentage": 76.0,
+      "rank": 6,
+      "grade": "B+"
+    },
+    {
+      "rollNo": "XOS-008",
+      "name": "Pruthvi Raj",
+      "marks": {
+        "PHYSICS": {
+          "positive": 68,
+          "negative": 4,
+          "total": 64
+        },
+        "CHEMISTRY": {
+          "positive": 72,
+          "negative": 3,
+          "total": 69
+        },
+        "MATHS": {
+          "positive": 60,
+          "negative": 5,
+          "total": 55
+        }
+      },
+      "total": 188,
+      "percentage": 62.67,
+      "rank": 7,
+      "grade": "B"
+    },
+    {
+      "rollNo": "XOS-004",
+      "name": "Darshan K.",
+      "marks": {
+        "PHYSICS": {
+          "positive": 60,
+          "negative": 5,
+          "total": 55
+        },
+        "CHEMISTRY": {
+          "positive": 64,
+          "negative": 4,
+          "total": 60
+        },
+        "MATHS": {
+          "positive": 56,
+          "negative": 6,
+          "total": 50
+        }
+      },
+      "total": 165,
+      "percentage": 55.0,
+      "rank": 8,
+      "grade": "C"
+    },
+    {
+      "rollNo": "XOS-010",
+      "name": "Varun Nayak",
+      "marks": {
+        "PHYSICS": {
+          "positive": 64,
+          "negative": 4,
+          "total": 60
+        },
+        "CHEMISTRY": {
+          "positive": 68,
+          "negative": 3,
+          "total": 65
+        },
+        "MATHS": {
+          "positive": 56,
+          "negative": 4,
+          "total": 52
+        }
+      },
+      "total": 177,
+      "percentage": 59.0,
+      "rank": 9,
+      "grade": "C"
+    },
+    {
+      "rollNo": "XOS-006",
+      "name": "Manish Gowda",
+      "marks": {
+        "PHYSICS": {
+          "positive": 48,
+          "negative": 7,
+          "total": 41
+        },
+        "CHEMISTRY": {
+          "positive": 56,
+          "negative": 5,
+          "total": 51
+        },
+        "MATHS": {
+          "positive": 44,
+          "negative": 6,
+          "total": 38
+        }
+      },
+      "total": 130,
+      "percentage": 43.33,
+      "rank": 10,
+      "grade": "D"
+    }
+  ]
+}
