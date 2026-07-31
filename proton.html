@@ -80,6 +80,75 @@ body{
 .princi-line{ margin-top:12px; padding-top:12px; border-top:1px solid var(--border); font-size:.78rem; line-height:1.55; color:var(--text-1); }
 .princi-line .pl-tag{ font-family:var(--font-m); font-size:.5rem; color:var(--text-3); letter-spacing:.1em; text-transform:uppercase; display:block; margin-bottom:6px; }
 
+/* ─── Graph styles (integrated from main portal) ─── */
+.graph-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin-top: 14px;
+}
+@media (min-width: 500px) {
+  .graph-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .graph-grid .graph-card:last-child {
+    grid-column: 1 / -1;
+  }
+}
+@media (min-width: 760px) {
+  .graph-grid {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+  .graph-grid .graph-card:last-child {
+    grid-column: auto;
+  }
+}
+.graph-card {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--r-xs);
+  padding: 12px 10px 8px;
+  transition: .2s;
+}
+.graph-card .graph-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+.graph-card .graph-header .gh-title {
+  font-size: .65rem;
+  font-weight: 700;
+  color: var(--text-0);
+  letter-spacing: -0.01em;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.graph-card .graph-header .gh-title i {
+  color: var(--text-3);
+  font-size: .6rem;
+}
+.graph-card .graph-header .gh-badge {
+  font-family: var(--font-m);
+  font-size: .45rem;
+  color: var(--text-3);
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  background: var(--surface-3);
+  padding: 2px 10px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+}
+.graph-card canvas {
+  width: 100% !important;
+  height: auto !important;
+  aspect-ratio: 4 / 3;
+  display: block;
+  border-radius: var(--r-xs);
+  background: var(--surface);
+}
+
 .loading-line{ display:flex; align-items:center; gap:10px; }
 .shine-text{ background: linear-gradient(90deg, var(--text-3) 0%, var(--text-0) 50%, var(--text-3) 100%); background-size: 200% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; animation:shineSweep 1.3s linear infinite; }
 @keyframes shineSweep{ 0%{ background-position:200% 0; } 100%{ background-position:-200% 0; } }
@@ -147,7 +216,7 @@ body{
   <div class="empty-hero" id="emptyHero">
     <i class="fa-solid fa-wand-magic-sparkles"></i>
     <div class="eh-title" id="heroGreeting">Hey there</div>
-    <div class="eh-sub">Pick NEET/JEE, KCET, or Boards to check a result</div>
+    <div class="eh-sub">Pick a test below or type your query</div>
   </div>
   <div id="chatBody" style="display:none;"></div>
 </div>
@@ -157,6 +226,8 @@ body{
     <div class="cmd-pill" data-cat="jee"><i class="fa-solid fa-award"></i> NEET / JEE</div>
     <div class="cmd-pill" data-cat="kcet"><i class="fa-solid fa-award"></i> KCET</div>
     <div class="cmd-pill" data-cat="boards"><i class="fa-solid fa-award"></i> Boards</div>
+    <!-- NEW: Part Test 1 pill -->
+    <div class="cmd-pill" data-cat="parttest1"><i class="fa-solid fa-flask"></i> Part Test 1</div>
   </div>
   <div class="composer-box">
     <textarea class="composer-input" id="composerInput" placeholder="Message Proton…" rows="1"></textarea>
@@ -166,23 +237,9 @@ body{
 
 <script>
 // ─── localStorage helpers ───────────────────────────────────────────────
-// FIX: LS.set() now returns true/false instead of silently swallowing
-// quota errors (kept consistent with index.html, which is where photos
-// are actually saved). Proton itself never writes 'pfp', only reads it,
-// so this change is for consistency/debuggability rather than the fix
-// itself — but if you ever add a photo-set flow here too, failures will
-// now be visible instead of silently disappearing on reload.
 const LS = {
   get(k, def){ try{ const v = localStorage.getItem('pu_'+k); return v!==null ? JSON.parse(v) : def; }catch{ return def; } },
-  set(k, v){
-    try{
-      localStorage.setItem('pu_'+k, JSON.stringify(v));
-      return true;
-    }catch(e){
-      console.error('LS.set failed for pu_'+k, e);
-      return false;
-    }
-  }
+  set(k, v){ try{ localStorage.setItem('pu_'+k, JSON.stringify(v)); return true; }catch{ return false; } }
 };
 
 // ─── session & identity ──────────────────────────────────────────────────
@@ -195,7 +252,6 @@ function applyIdentity(){
   const greet = hr < 12 ? 'good morning' : hr < 17 ? 'good afternoon' : 'good evening';
   document.getElementById('heroGreeting').textContent = session ? `Hey ${name.split(' ')[0]}, ${greet}` : `Hey there, ${greet}`;
 
-  // Set profile picture in sidebar blob (from localStorage)
   const pfp = LS.get('pfp', null);
   const blob = document.getElementById('sbBlob');
   if(pfp && pfp.startsWith('data:image')){
@@ -207,7 +263,7 @@ function applyIdentity(){
     blob.style.color = 'var(--bg)';
   }
 }
-applyIdentity(); // run on load
+applyIdentity();
 
 // ─── sidebar toggle ──────────────────────────────────────────────────────
 const sidebar = document.getElementById('sidebar');
@@ -383,7 +439,361 @@ async function fetchAndRenderResult(exam, roll){
 }
 
 function subjLabel(s){ return s.charAt(0)+s.slice(1).toLowerCase(); }
+
+// ─── Graph drawing functions (copied from main portal) ──────────────────
+
+function getThemeColors() {
+  const isDark = document.documentElement.getAttribute('data-theme') !== 'light';
+  return {
+    bg: isDark ? '#0a0a0a' : '#ffffff',
+    text: isDark ? '#ffffff' : '#0a0a0a',
+    textMuted: isDark ? '#8a8a8a' : '#6b6b6f',
+    border: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)',
+    green: '#30d158',
+    red: '#ff453a',
+    surface: isDark ? '#111' : '#f0f0f2',
+  };
+}
+
+// roundRect polyfill
+if (!CanvasRenderingContext2D.prototype.roundRect) {
+  CanvasRenderingContext2D.prototype.roundRect = function(x, y, w, h, radii) {
+    const r = typeof radii === 'number' ? radii : (radii ? radii[0] : 0) || 0;
+    this.moveTo(x + r, y);
+    this.lineTo(x + w - r, y);
+    this.quadraticCurveTo(x + w, y, x + w, y + r);
+    this.lineTo(x + w, y + h - r);
+    this.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+    this.lineTo(x + r, y + h);
+    this.quadraticCurveTo(x, y + h, x, y + h - r);
+    this.lineTo(x, y + r);
+    this.quadraticCurveTo(x, y, x + r, y);
+    return this;
+  };
+}
+
+function drawCharts(prefix, labels, scores) {
+  drawBarChart(prefix + 'Bar', labels, scores);
+  drawLineChart(prefix + 'Line', labels, scores);
+  drawDonutChart(prefix + 'Donut', labels, scores);
+}
+
+function drawBarChart(canvasId, labels, scores) {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const rect = canvas.parentElement.getBoundingClientRect();
+  const w = canvas.width = canvas.clientWidth || 400;
+  const h = canvas.height = canvas.clientHeight || 300;
+  const dpr = window.devicePixelRatio || 1;
+  canvas.width = w * dpr;
+  canvas.height = h * dpr;
+  canvas.style.width = w + 'px';
+  canvas.style.height = h + 'px';
+  ctx.scale(dpr, dpr);
+
+  const theme = getThemeColors();
+  const pad = { top: 24, bottom: 36, left: 36, right: 16 };
+  const chartW = w - pad.left - pad.right;
+  const chartH = h - pad.top - pad.bottom;
+  const barCount = scores.length;
+  const gap = 6;
+  const barW = Math.min((chartW - gap * (barCount - 1)) / barCount, 40);
+  const totalBarSpace = barW * barCount + gap * (barCount - 1);
+  const offsetX = (chartW - totalBarSpace) / 2;
+
+  ctx.clearRect(0, 0, w, h);
+  ctx.fillStyle = theme.bg;
+  ctx.fillRect(0, 0, w, h);
+
+  if (scores.every(v => v === 0) || scores.length === 0) {
+    ctx.fillStyle = theme.textMuted;
+    ctx.font = '12px "DM Mono", monospace';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('No data', w / 2, h / 2);
+    return;
+  }
+
+  const maxVal = Math.max(100, ...scores);
+  const yScale = chartH / maxVal;
+
+  ctx.strokeStyle = theme.border;
+  ctx.lineWidth = 0.5;
+  for (let i = 0; i <= 4; i++) {
+    const y = pad.top + chartH - (i / 4) * chartH;
+    ctx.beginPath();
+    ctx.moveTo(pad.left, y);
+    ctx.lineTo(w - pad.right, y);
+    ctx.stroke();
+    ctx.fillStyle = theme.textMuted;
+    ctx.font = '9px "DM Mono", monospace';
+    ctx.textAlign = 'right';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(Math.round((i / 4) * maxVal), pad.left - 6, y);
+  }
+
+  scores.forEach((val, i) => {
+    const x = pad.left + offsetX + i * (barW + gap);
+    const barH = val * yScale;
+    const y = pad.top + chartH - barH;
+    const isGood = val >= 60;
+    const color = isGood ? theme.green : theme.red;
+
+    ctx.shadowColor = isGood ? 'rgba(48,209,88,0.15)' : 'rgba(255,69,58,0.15)';
+    ctx.shadowBlur = 8;
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.roundRect(x, y, barW, barH, [3, 3, 0, 0]);
+    ctx.fill();
+    ctx.shadowBlur = 0;
+
+    ctx.fillStyle = theme.text;
+    ctx.font = 'bold 10px "DM Mono", monospace';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'bottom';
+    ctx.fillText(val, x + barW / 2, y - 4);
+
+    ctx.fillStyle = theme.textMuted;
+    ctx.font = '9px "DM Mono", monospace';
+    ctx.textBaseline = 'top';
+    const label = labels[i] ? labels[i].slice(0, 4) : '';
+    ctx.fillText(label, x + barW / 2, pad.top + chartH + 6);
+  });
+}
+
+function drawLineChart(canvasId, labels, scores) {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const rect = canvas.parentElement.getBoundingClientRect();
+  const w = canvas.width = canvas.clientWidth || 400;
+  const h = canvas.height = canvas.clientHeight || 300;
+  const dpr = window.devicePixelRatio || 1;
+  canvas.width = w * dpr;
+  canvas.height = h * dpr;
+  canvas.style.width = w + 'px';
+  canvas.style.height = h + 'px';
+  ctx.scale(dpr, dpr);
+
+  const theme = getThemeColors();
+  const pad = { top: 28, bottom: 36, left: 36, right: 20 };
+  const chartW = w - pad.left - pad.right;
+  const chartH = h - pad.top - pad.bottom;
+
+  ctx.clearRect(0, 0, w, h);
+  ctx.fillStyle = theme.bg;
+  ctx.fillRect(0, 0, w, h);
+
+  if (scores.every(v => v === 0) || scores.length === 0) {
+    ctx.fillStyle = theme.textMuted;
+    ctx.font = '12px "DM Mono", monospace';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('No data', w / 2, h / 2);
+    return;
+  }
+
+  const maxVal = Math.max(100, ...scores);
+  const yScale = chartH / maxVal;
+  const xStep = chartW / (scores.length - 1 || 1);
+
+  ctx.strokeStyle = theme.border;
+  ctx.lineWidth = 0.5;
+  for (let i = 0; i <= 4; i++) {
+    const y = pad.top + chartH - (i / 4) * chartH;
+    ctx.beginPath();
+    ctx.moveTo(pad.left, y);
+    ctx.lineTo(w - pad.right, y);
+    ctx.stroke();
+    ctx.fillStyle = theme.textMuted;
+    ctx.font = '9px "DM Mono", monospace';
+    ctx.textAlign = 'right';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(Math.round((i / 4) * maxVal), pad.left - 6, y);
+  }
+
+  const points = scores.map((v, i) => ({
+    x: pad.left + i * xStep,
+    y: pad.top + chartH - v * yScale
+  }));
+
+  const grad = ctx.createLinearGradient(0, pad.top, 0, pad.top + chartH);
+  grad.addColorStop(0, 'rgba(48,209,88,0.25)');
+  grad.addColorStop(1, 'rgba(48,209,88,0.01)');
+  ctx.fillStyle = grad;
+  ctx.beginPath();
+  ctx.moveTo(points[0].x, pad.top + chartH);
+  points.forEach(p => ctx.lineTo(p.x, p.y));
+  ctx.lineTo(points[points.length - 1].x, pad.top + chartH);
+  ctx.closePath();
+  ctx.fill();
+
+  ctx.strokeStyle = theme.green;
+  ctx.lineWidth = 2.5;
+  ctx.shadowColor = 'rgba(48,209,88,0.3)';
+  ctx.shadowBlur = 10;
+  ctx.beginPath();
+  points.forEach((p, i) => { i === 0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y); });
+  ctx.stroke();
+  ctx.shadowBlur = 0;
+
+  points.forEach((p, i) => {
+    const val = scores[i];
+    const isGood = val >= 60;
+    const color = isGood ? theme.green : theme.red;
+
+    ctx.shadowColor = isGood ? 'rgba(48,209,88,0.3)' : 'rgba(255,69,58,0.3)';
+    ctx.shadowBlur = 12;
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, 5, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.shadowBlur = 0;
+
+    ctx.fillStyle = theme.bg;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, 2.5, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.fillStyle = theme.text;
+    ctx.font = 'bold 9px "DM Mono", monospace';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'bottom';
+    ctx.fillText(val, p.x, p.y - 8);
+
+    ctx.fillStyle = theme.textMuted;
+    ctx.font = '8px "DM Mono", monospace';
+    ctx.textBaseline = 'top';
+    const label = labels[i] ? labels[i].slice(0, 4) : '';
+    ctx.fillText(label, p.x, pad.top + chartH + 6);
+  });
+}
+
+function drawDonutChart(canvasId, labels, scores) {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const rect = canvas.parentElement.getBoundingClientRect();
+  const w = canvas.width = canvas.clientWidth || 400;
+  const h = canvas.height = canvas.clientHeight || 300;
+  const dpr = window.devicePixelRatio || 1;
+  canvas.width = w * dpr;
+  canvas.height = h * dpr;
+  canvas.style.width = w + 'px';
+  canvas.style.height = h + 'px';
+  ctx.scale(dpr, dpr);
+
+  const theme = getThemeColors();
+  const cx = w / 2;
+  const cy = h / 2 - 4;
+  const radius = Math.min(w, h) * 0.35;
+  const innerRadius = radius * 0.55;
+
+  ctx.clearRect(0, 0, w, h);
+  ctx.fillStyle = theme.bg;
+  ctx.fillRect(0, 0, w, h);
+
+  if (scores.every(v => v === 0) || scores.length === 0) {
+    ctx.fillStyle = theme.textMuted;
+    ctx.font = '12px "DM Mono", monospace';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('No data', w / 2, h / 2);
+    return;
+  }
+
+  const total = scores.reduce((a, b) => a + b, 0) || 1;
+  const maxPossible = scores.length * 100;
+  const overallPct = (total / maxPossible) * 100;
+
+  const colors = ['#30d158', '#ff453a', '#ff9f0a', '#0a84ff', '#bf5af2'];
+  let startAngle = -Math.PI / 2;
+
+  scores.forEach((val, i) => {
+    if (val === 0) return;
+    const sliceAngle = (val / total) * Math.PI * 2;
+    const endAngle = startAngle + sliceAngle;
+
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius, startAngle, endAngle);
+    ctx.arc(cx, cy, innerRadius, endAngle, startAngle, true);
+    ctx.closePath();
+    ctx.fillStyle = colors[i % colors.length];
+    ctx.shadowColor = 'rgba(0,0,0,0.15)';
+    ctx.shadowBlur = 6;
+    ctx.fill();
+    ctx.shadowBlur = 0;
+
+    const midAngle = startAngle + sliceAngle / 2;
+    const labelR = radius + 18;
+    const lx = cx + Math.cos(midAngle) * labelR;
+    const ly = cy + Math.sin(midAngle) * labelR;
+    const pct = Math.round((val / total) * 100);
+    if (pct > 3) {
+      ctx.fillStyle = theme.text;
+      ctx.font = 'bold 8px "DM Mono", monospace';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(`${pct}%`, lx, ly);
+    }
+    startAngle = endAngle;
+  });
+
+  ctx.shadowBlur = 0;
+  ctx.fillStyle = theme.bg;
+  ctx.beginPath();
+  ctx.arc(cx, cy, innerRadius * 0.75, 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.fillStyle = theme.text;
+  ctx.font = 'bold 18px "Space Grotesk", sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(`${Math.round(overallPct)}%`, cx, cy - 4);
+
+  ctx.fillStyle = theme.textMuted;
+  ctx.font = '7px "DM Mono", monospace';
+  ctx.textBaseline = 'top';
+  ctx.fillText('OVERALL', cx, cy + 12);
+
+  const legendY = h - 20;
+  let legendX = 20;
+  const visible = scores.map((val, i) => ({ label: labels[i] || '', color: colors[i % colors.length], val }))
+    .filter(item => item.val > 0);
+  if (visible.length > 0) {
+    const totalLegendWidth = visible.reduce((acc, item) => acc + ctx.measureText(item.label).width + 24, 0);
+    legendX = (w - totalLegendWidth) / 2;
+    visible.forEach((item) => {
+      ctx.fillStyle = item.color;
+      ctx.beginPath();
+      ctx.arc(legendX + 4, legendY - 2, 4, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = theme.textMuted;
+      ctx.font = '8px "DM Mono", monospace';
+      ctx.textAlign = 'left';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(item.label, legendX + 12, legendY);
+      legendX += ctx.measureText(item.label).width + 24;
+    });
+  }
+}
+
+// ─── Enhanced result rendering with graphs ──────────────────────────────
+
 async function renderResultCard(dataset, record, exam){
+  // Extract subjects: if dataset has subjects array, use it; else get keys from marks (excluding special keys)
+  let subjects = dataset.subjects;
+  if (!subjects || subjects.length === 0) {
+    subjects = Object.keys(record.marks).filter(k => !['total','percentage','grade','rank'].includes(k.toLowerCase()));
+  }
+  // Get scores for each subject
+  const scores = subjects.map(subj => {
+    const m = record.marks[subj];
+    return (m && typeof m === 'object') ? m.total : m;
+  });
+
+  // Build result HTML
   let princiHtml = '';
   if(exam.princiMsgFile){
     const msgs = await loadJson(exam.princiMsgFile);
@@ -394,6 +804,13 @@ async function renderResultCard(dataset, record, exam){
       }
     }
   }
+
+  // Generate unique IDs for canvas elements
+  const uid = 'pt_' + Date.now() + '_';
+  const barId = uid + 'bar';
+  const lineId = uid + 'line';
+  const donutId = uid + 'donut';
+
   const html = `
     <div class="result-hero">
       <div class="rh-name">${escapeHtml(record.name)}</div>
@@ -406,15 +823,68 @@ async function renderResultCard(dataset, record, exam){
       <div class="stat-box"><div class="sb-val">#${record.rank}</div><div class="sb-lbl">Rank</div></div>
     </div>
     <div class="marks-table">
-      ${dataset.subjects.map(subj => {
+      ${subjects.map(subj => {
         const m = record.marks[subj];
         const breakdown = (m && typeof m === 'object') ? `<span class="ms-break">+${m.positive} / -${m.negative}</span>` : '';
         const total = (m && typeof m === 'object') ? m.total : m;
-        return `<div class="marks-row"><div class="marks-subj">${subjLabel(subj)}${breakdown}</div><div class="marks-val">${total} <span class="mv-max">/ ${dataset.maxPerSubject}</span></div></div>`;
+        return `<div class="marks-row"><div class="marks-subj">${subjLabel(subj)}${breakdown}</div><div class="marks-val">${total} <span class="mv-max">/ ${dataset.maxPerSubject || 100}</span></div></div>`;
       }).join('')}
     </div>
-    ${princiHtml}`;
-  protonSays(html, `${record.name} · ${exam.shortName} · Total ${record.total} · Rank #${record.rank}`);
+    ${princiHtml}
+    <div class="graph-grid">
+      <div class="graph-card">
+        <div class="graph-header"><div class="gh-title"><i class="fa-solid fa-chart-column"></i> Subject Scores</div><span class="gh-badge">bar</span></div>
+        <canvas id="${barId}" width="400" height="300"></canvas>
+      </div>
+      <div class="graph-card">
+        <div class="graph-header"><div class="gh-title"><i class="fa-solid fa-chart-line"></i> Score Trend</div><span class="gh-badge">line</span></div>
+        <canvas id="${lineId}" width="400" height="300"></canvas>
+      </div>
+      <div class="graph-card">
+        <div class="graph-header"><div class="gh-title"><i class="fa-solid fa-chart-pie"></i> Distribution</div><span class="gh-badge">donut</span></div>
+        <canvas id="${donutId}" width="400" height="300"></canvas>
+      </div>
+    </div>
+  `;
+
+  const row = protonSays(html, `${record.name} · ${exam.shortName} · Total ${record.total} · Rank #${record.rank}`);
+
+  // After the HTML is rendered, draw the charts
+  // Use requestAnimationFrame to ensure DOM is updated
+  requestAnimationFrame(() => {
+    setTimeout(() => {
+      drawCharts(uid, subjects, scores);
+    }, 50);
+  });
+}
+
+// ─── Part Test 1 flow ────────────────────────────────────────────────────
+
+async function startPartTest1Flow(){
+  protonSays(loadingLine('Loading Part Test 1…'));
+  const rows = document.getElementById('chatBody');
+  const loadingRow = rows.lastElementChild;
+  const data = await loadJson('./results_1pujeeparttest1.json');
+  loadingRow.remove();
+  if(!data || !data.results || data.results.length === 0){
+    protonSays(`<i class="fa-regular fa-folder-open"></i> No Part Test 1 data available.`);
+    return;
+  }
+  // Extract subjects from first record
+  const first = data.results[0];
+  const subjects = Object.keys(first.marks).filter(k => !['total','percentage','grade','rank'].includes(k.toLowerCase()));
+  // Build exam object
+  const exam = {
+    shortName: 'Part Test 1',
+    displayName: 'Part Test 1',
+    resultsFile: 'results_1pujeeparttest1.json',
+    subjects: subjects,
+    maxPerSubject: 100, // assume 100
+    princiMsgFile: null
+  };
+  // Store subjects in exam for later use
+  exam._subjects = subjects;
+  askForRoll(exam);
 }
 
 // ─── intent parsing ──────────────────────────────────────────────────────
@@ -424,6 +894,12 @@ async function tryParseResultIntent(text){
   if(/neet|jee/.test(t)) category = 'jee';
   else if(/kcet/.test(t)) category = 'kcet';
   else if(/board/.test(t)) category = 'boards';
+  else if(/part test/.test(t)) { 
+    // direct part test request
+    userSays(text);
+    startPartTest1Flow();
+    return true;
+  }
   if(!category && !/result|marks|score/.test(t)) return false;
   category = category || 'jee';
   try{
@@ -474,7 +950,7 @@ async function handleSmartMessage(rawText){
   if(handled) return;
   const chatGuess = classifyChat(rawText);
   if(chatGuess){ protonSays(escapeHtml(chatGuess.output)); return; }
-  protonSays(`I can check your NEET/JEE, KCET, or Boards result — tap a pill above, or just type something like "jee pt1 result". 🙂`);
+  protonSays(`I can check your NEET/JEE, KCET, Boards, or Part Test 1 result — tap a pill above, or just type your query. 🙂`);
 }
 
 // ─── composer init ───────────────────────────────────────────────────────
@@ -492,8 +968,13 @@ function initComposer(){
   document.querySelectorAll('.cmd-pill[data-cat]').forEach(pill=>{
     pill.addEventListener('click', ()=>{
       const cat = pill.getAttribute('data-cat');
-      userSays(CATEGORY_LABELS[cat]);
-      startCategoryFlow(cat);
+      if(cat === 'parttest1') {
+        userSays('Part Test 1');
+        startPartTest1Flow();
+      } else {
+        userSays(CATEGORY_LABELS[cat]);
+        startCategoryFlow(cat);
+      }
     });
   });
 }
