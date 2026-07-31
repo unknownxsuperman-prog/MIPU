@@ -1,85 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover" />
-    <meta name="color-scheme" content="dark light" />
-    <meta name="theme-color" content="#000000" />
-    <title>1st PU · Result Portal</title>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <style>
-        /* ─── Base ─── */
-        *,
-        *::before,
-        *::after {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        :root {
-            color-scheme: dark;
-            --bg: #000;
-            --surface: #0a0a0a;
-            --surface-2: #111;
-            --surface-3: #161616;
-            --border: rgba(255, 255, 255, 0.08);
-            --border-strong: rgba(255, 255, 255, 0.16);
-            --border-focus: rgba(255, 255, 255, 0.5);
-            --text-0: #fff;
-            --text-1: #e8e8e8;
-            --text-2: #8a8a8a;
-            --text-3: #454545;
-            --accent: #fff;
-            --danger: #ff453a;
-            --success: #30d158;
-            --warning: #ff9f0a;
-            --font-d: 'Space Grotesk', sans-serif;
-            --font-m: 'DM Mono', monospace;
-            --r: 16px;
-            --r-sm: 12px;
-            --r-xs: 8px;
-        }
-        [data-theme="light"] {
-            color-scheme: light;
-            --bg: #f4f4f6;
-            --surface: #fff;
-            --surface-2: #f0f0f2;
-            --surface-3: #e9e9ec;
-            --border: rgba(0, 0, 0, 0.08);
-            --border-strong: rgba(0, 0, 0, 0.16);
-            --border-focus: rgba(0, 0, 0, 0.5);
-            --text-0: #0a0a0a;
-            --text-1: #1c1c1e;
-            --text-2: #6b6b6f;
-            --text-3: #a2a2a6;
-        }
-        html {
-            height: 100%;
-        }
-        body {
-            background: var(--bg);
-            color: var(--text-1);
-            font-family: var(--font-d);
-            min-height: 100vh;
-            min-height: calc(var(--vh, 1vh) * 100);
-            -webkit-font-smoothing: antialiased;
-            width: 100%;
-            max-width: 100vw;
-            overflow-x: hidden;
-            transition: background .3s, color .3s;
-        }
-        .screen {
-            display: none;
-            min-height: 100vh;
-            min-height: calc(var(--vh, 1vh) * 100);
-            flex-direction: column;
-        }
-        .screen.active {
-            display: flex;
-        }
-
-        /* ─── Login ─── */
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="dark light">
+<meta name="theme-color" content="#000000">
+<title>1st PU · Result Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<style>
+/* ─── same styles as before, unchanged ─── */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  color-scheme: dark;
+  --bg:#000; --surface:#0a0a0a; --surface-2:#111; --surface-3:#161616;
+  --border:rgba(255,255,255,0.08); --border-strong:rgba(255,255,255,0.16); --border-focus:rgba(255,255,255,0.5);
+  --text-0:#fff; --text-1:#e8e8e8; --text-2:#8a8a8a; --text-3:#454545;
+  --accent:#fff; --danger:#ff453a; --success:#30d158; --warning:#ff9f0a;
+  --font-d:'Space Grotesk',sans-serif; --font-m:'DM Mono',monospace;
+  --r:16px; --r-sm:12px; --r-xs:8px;
+}
+[data-theme="light"]{
+  color-scheme: light;
+  --bg:#f4f4f6; --surface:#fff; --surface-2:#f0f0f2; --surface-3:#e9e9ec;
+  --border:rgba(0,0,0,0.08); --border-strong:rgba(0,0,0,0.16); --border-focus:rgba(0,0,0,0.5);
+  --text-0:#0a0a0a; --text-1:#1c1c1e; --text-2:#6b6b6f; --text-3:#a2a2a6;
+}
+html{ height:100%; }
+body{
+  background:var(--bg); color:var(--text-1); font-family:var(--font-d);
+  min-height:100vh; min-height:calc(var(--vh, 1vh) * 100); -webkit-font-smoothing:antialiased;
+  width:100%; max-width:100vw; overflow-x:hidden; transition:background .3s,color .3s;
+}
+.screen{ display:none; min-height:100vh; min-height:calc(var(--vh, 1vh) * 100); flex-direction:column; }
+.screen.active{ display:flex; }
+/* ─── Login ─── */
         #loginScreen {
             align-items: center;
             justify-content: center;
@@ -914,11 +869,11 @@
                 max-width: 400px;
             }
         }
-    </style>
+</style>
 </head>
 <body>
 
-    <!-- ═══════════════ LOGIN ═══════════════ -->
+ <!-- ═══════════════ LOGIN ═══════════════ -->
     <div class="screen active" id="loginScreen">
         <div class="login-card">
             <div class="login-brand">
@@ -1127,828 +1082,847 @@
         <div class="overlay-body" id="timetableBody"></div>
     </div>
 
-    <script>
-        /* ══════════════════════════════════════════════════════════
-           STORAGE
-           ══════════════════════════════════════════════════════════ */
-        const LS = {
-            get(k, def) { try { const v = localStorage.getItem('pu_' + k); return v !== null ? JSON.parse(v) : def; } catch { return def; } },
-            set(k, v) { try { localStorage.setItem('pu_' + k, JSON.stringify(v)); return true; } catch { return false; } }
+<script>
+/* ══════════════════════════════════════════════════════════
+   STORAGE
+   ══════════════════════════════════════════════════════════ */
+const LS = {
+    get(k, def) { try { const v = localStorage.getItem('pu_' + k); return v !== null ? JSON.parse(v) : def; } catch { return def; } },
+    set(k, v) { try { localStorage.setItem('pu_' + k, JSON.stringify(v)); return true; } catch { return false; } }
+};
+
+/* ══════════════════════════════════════════════════════════
+   VIEWPORT
+   ══════════════════════════════════════════════════════════ */
+function setVH() { const vh = (window.visualViewport ? window.visualViewport.height : window.innerHeight) * 0.01;
+    document.documentElement.style.setProperty('--vh', vh + 'px'); }
+setVH();
+window.addEventListener('resize', setVH);
+window.addEventListener('orientationchange', () => setTimeout(setVH, 100));
+
+/* ══════════════════════════════════════════════════════════
+   THEME
+   ══════════════════════════════════════════════════════════ */
+function applyTheme() { const dark = LS.get('dark_mode', true); document.documentElement.setAttribute('data-theme',
+        dark ? 'dark' : 'light'); const dt = document.getElementById('darkToggle'); if (dt) dt.checked = dark; }
+applyTheme();
+
+/* ══════════════════════════════════════════════════════════
+   SCREEN ROUTER
+   ══════════════════════════════════════════════════════════ */
+const SCREENS = ['loginScreen', 'dashboardScreen', 'profileScreen', 'examSelectScreen', 'rollEntryScreen',
+    'resultScreen', 'timetableScreen'
+];
+
+function showScreen(id, push) {
+    SCREENS.forEach(s => document.getElementById(s).classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    window.scrollTo(0, 0);
+    if (push !== false) { history.pushState({ screen: id }, '', '#' + id); }
+    if (id === 'profileScreen') {
+        loadAndDrawProfileCharts();
+    }
+}
+window.addEventListener('popstate', (e) => {
+    const id = (e.state && e.state.screen) || (isLoggedIn() ? 'dashboardScreen' : 'loginScreen');
+    showScreen(id, false);
+});
+
+/* ══════════════════════════════════════════════════════════
+   SESSION
+   ══════════════════════════════════════════════════════════ */
+function isLoggedIn() { return !!LS.get('session', null); }
+
+function getSession() { return LS.get('session', null); }
+
+/* ══════════════════════════════════════════════════════════
+   TRACK LOOKUP
+   ══════════════════════════════════════════════════════════ */
+async function detectTrack(roll) {
+    const rosterFiles = { jee: './students1pujee.json', neet: './students1puneet.json' };
+    for (const [track, file] of Object.entries(rosterFiles)) {
+        try {
+            const r = await fetch(file);
+            if (!r.ok) continue;
+            const data = await r.json();
+            const match = (data.students || []).find(s => s.rollNo.toLowerCase() === roll.toLowerCase());
+            if (match) return { track, name: match.name };
+        } catch (e) { /* skip */ }
+    }
+    return { track: null, name: null };
+}
+
+/* ══════════════════════════════════════════════════════════
+   LOGIN
+   ══════════════════════════════════════════════════════════ */
+async function handleLogin() {
+    const name = document.getElementById('loginName').value.trim();
+    const roll = document.getElementById('loginRoll').value.trim();
+    const dob = document.getElementById('loginDob').value;
+    const year = document.getElementById('loginYear').value;
+    if (!name || !roll) { alert('Please enter your name and roll number.'); return; }
+    const detected = await detectTrack(roll);
+    const session = { name: detected.name || name, enteredName: name, rollNo: roll, dob, year, track: detected
+            .track, loginAt: Date.now() };
+    LS.set('session', session);
+    LS.set('last_roll_search', roll);
+    applyDashboard();
+    showScreen('dashboardScreen');
+}
+document.getElementById('loginBtn').addEventListener('click', handleLogin);
+
+/* ══════════════════════════════════════════════════════════
+   DASHBOARD & PFP
+   ══════════════════════════════════════════════════════════ */
+function applyDashboard() {
+    const s = getSession();
+    if (!s) return;
+    document.getElementById('dashGreetName').textContent = `Hey, ${s.name.split(' ')[0]}`;
+    document.getElementById('dashGreetSub').textContent = `${s.year==='2'?'2nd':'1st'} PU · ${s.rollNo}`;
+    document.getElementById('profileNameDisplay').textContent = s.name;
+    document.getElementById('profileRollDisplay').textContent = `${s.rollNo} · ${s.year==='2'?'2nd':'1st'} PU`;
+
+    const pfp = LS.get('pfp', null);
+    const topImg = document.getElementById('pfpTopImg');
+    const profileImg = document.getElementById('pfpProfileImg');
+    const pfpBtn = document.getElementById('pfpBtn');
+
+    if (pfp && pfp.startsWith('data:image')) {
+        topImg.src = pfp;
+        topImg.style.display = 'block';
+        profileImg.src = pfp;
+        const icon = pfpBtn.querySelector('i');
+        if (icon) icon.remove();
+    } else {
+        topImg.style.display = 'none';
+        if (!pfpBtn.querySelector('i')) {
+            const icon = document.createElement('i');
+            icon.className = 'fa-solid fa-user';
+            pfpBtn.appendChild(icon);
+        }
+        const initial = s.name.charAt(0).toUpperCase();
+        const svg =
+            `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96"><rect width="96" height="96" fill="%23111"/><text x="48" y="48" font-family="Arial" font-size="40" fill="white" text-anchor="middle" dominant-baseline="central">${initial}</text></svg>`;
+        profileImg.src = svg;
+    }
+}
+
+document.getElementById('checkResultBtn').addEventListener('click', () => openExamSelect());
+document.getElementById('timetableBtn').addEventListener('click', () => openTimetable());
+document.getElementById('fabAi').addEventListener('click', () => { window.location.href = './proton.html'; });
+
+/* ══════════════════════════════════════════════════════════
+   PROFILE
+   ══════════════════════════════════════════════════════════ */
+document.getElementById('pfpBtn').addEventListener('click', () => { applyDashboard();
+    showScreen('profileScreen'); });
+document.getElementById('pfpEditTrigger').addEventListener('click', () => document.getElementById('pfpFileInput')
+    .click());
+
+function compressImageToDataUrl(file, maxDim = 320, quality = 0.72) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onerror = () => reject(new Error('Could not read file'));
+        reader.onload = () => {
+            const img = new Image();
+            img.onerror = () => reject(new Error('Could not decode image'));
+            img.onload = () => {
+                let { width, height } = img;
+                if (width > height && width > maxDim) { height = Math.round(height * (maxDim / width));
+                    width = maxDim; } else if (height >= width && height > maxDim) { width = Math.round(
+                        width * (maxDim / height));
+                    height = maxDim; }
+                const canvas = document.createElement('canvas');
+                canvas.width = width;
+                canvas.height = height;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, width, height);
+                resolve(canvas.toDataURL('image/jpeg', quality));
+            };
+            img.src = reader.result;
         };
+        reader.readAsDataURL(file);
+    });
+}
 
-        /* ══════════════════════════════════════════════════════════
-           VIEWPORT
-           ══════════════════════════════════════════════════════════ */
-        function setVH() { const vh = (window.visualViewport ? window.visualViewport.height : window.innerHeight) * 0.01;
-            document.documentElement.style.setProperty('--vh', vh + 'px'); }
-        setVH();
-        window.addEventListener('resize', setVH);
-        window.addEventListener('orientationchange', () => setTimeout(setVH, 100));
+document.getElementById('pfpFileInput').addEventListener('change', async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    try {
+        const dataUrl = await compressImageToDataUrl(file);
+        const saved = LS.set('pfp', dataUrl);
+        if (!saved) { alert("Couldn't save that photo — try a different picture.");
+            e.target.value = ''; return; }
+        document.getElementById('pfpProfileImg').src = dataUrl;
+        document.getElementById('pfpTopImg').src = dataUrl;
+        document.getElementById('pfpTopImg').style.display = 'block';
+        const btn = document.getElementById('pfpBtn');
+        const icon = btn.querySelector('i');
+        if (icon) icon.remove();
+    } catch (err) { console.error(err);
+        alert("Something went wrong processing that photo."); }
+    e.target.value = '';
+});
 
-        /* ══════════════════════════════════════════════════════════
-           THEME
-           ══════════════════════════════════════════════════════════ */
-        function applyTheme() { const dark = LS.get('dark_mode', true); document.documentElement.setAttribute('data-theme',
-                dark ? 'dark' : 'light'); const dt = document.getElementById('darkToggle'); if (dt) dt.checked = dark; }
-        applyTheme();
+document.getElementById('darkToggle').addEventListener('change', (e) => { LS.set('dark_mode', e.target.checked);
+    applyTheme(); });
+document.getElementById('logoutBtn').addEventListener('click', () => {
+    if (!confirm('Log out of this account?')) return;
+    localStorage.removeItem('pu_session');
+    showScreen('loginScreen');
+});
 
-        /* ══════════════════════════════════════════════════════════
-           SCREEN ROUTER
-           ══════════════════════════════════════════════════════════ */
-        const SCREENS = ['loginScreen', 'dashboardScreen', 'profileScreen', 'examSelectScreen', 'rollEntryScreen',
-            'resultScreen', 'timetableScreen'
-        ];
+/* ══════════════════════════════════════════════════════════
+   EXAM CATEGORY + SELECT
+   ══════════════════════════════════════════════════════════ */
+const dataCache = {};
 
-        function showScreen(id, push) {
-            SCREENS.forEach(s => document.getElementById(s).classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-            window.scrollTo(0, 0);
-            if (push !== false) { history.pushState({ screen: id }, '', '#' + id); }
-            // if profile, load part-test overview and draw profile graphs
-            if (id === 'profileScreen') {
-                loadAndDrawProfileCharts();
-            }
-        }
-        window.addEventListener('popstate', (e) => {
-            const id = (e.state && e.state.screen) || (isLoggedIn() ? 'dashboardScreen' : 'loginScreen');
-            showScreen(id, false);
-        });
+function loadJson(file) {
+    if (file in dataCache) return Promise.resolve(dataCache[file]);
+    return fetch(file).then(r => { if (!r.ok) throw new Error('missing'); return r.json(); })
+        .then(d => { dataCache[file] = d; return d; }).catch(() => { dataCache[file] = null; return null; });
+}
+const CATEGORY_FILES = { jee: './jee1pu.json', kcet: './kcet1pu.json', boards: './boards1pu.json' };
+const CATEGORY_LABELS = { jee: 'NEET / JEE', kcet: 'KCET', boards: 'Boards' };
+let activeCategory = 'jee';
 
-        /* ══════════════════════════════════════════════════════════
-           SESSION
-           ══════════════════════════════════════════════════════════ */
-        function isLoggedIn() { return !!LS.get('session', null); }
+async function openExamSelect() {
+    showScreen('examSelectScreen');
+    const s = getSession();
+    activeCategory = (s && s.track === 'neet') ? 'jee' : (s && s.track) || 'jee';
+    renderCategoryPills();
+    await renderExamList(activeCategory);
+}
 
-        function getSession() { return LS.get('session', null); }
+function renderCategoryPills() {
+    document.querySelectorAll('#categoryPills .pill-tab').forEach(p => {
+        p.classList.toggle('active', p.getAttribute('data-cat') === activeCategory);
+    });
+}
+document.querySelectorAll('#categoryPills .pill-tab').forEach(pill => {
+    pill.addEventListener('click', async () => {
+        activeCategory = pill.getAttribute('data-cat');
+        renderCategoryPills();
+        await renderExamList(activeCategory);
+    });
+});
 
-        /* ══════════════════════════════════════════════════════════
-           TRACK LOOKUP
-           ══════════════════════════════════════════════════════════ */
-        async function detectTrack(roll) {
-            const rosterFiles = { jee: './students1pujee.json', neet: './students1puneet.json' };
-            for (const [track, file] of Object.entries(rosterFiles)) {
-                try {
-                    const r = await fetch(file);
-                    if (!r.ok) continue;
-                    const data = await r.json();
-                    const match = (data.students || []).find(s => s.rollNo.toLowerCase() === roll.toLowerCase());
-                    if (match) return { track, name: match.name };
-                } catch (e) { /* skip */ }
-            }
-            return { track: null, name: null };
-        }
-
-        /* ══════════════════════════════════════════════════════════
-           LOGIN
-           ══════════════════════════════════════════════════════════ */
-        async function handleLogin() {
-            const name = document.getElementById('loginName').value.trim();
-            const roll = document.getElementById('loginRoll').value.trim();
-            const dob = document.getElementById('loginDob').value;
-            const year = document.getElementById('loginYear').value;
-            if (!name || !roll) { alert('Please enter your name and roll number.'); return; }
-            const detected = await detectTrack(roll);
-            const session = { name: detected.name || name, enteredName: name, rollNo: roll, dob, year, track: detected
-                    .track, loginAt: Date.now() };
-            LS.set('session', session);
-            LS.set('last_roll_search', roll);
-            applyDashboard();
-            showScreen('dashboardScreen');
-        }
-        document.getElementById('loginBtn').addEventListener('click', handleLogin);
-
-        /* ══════════════════════════════════════════════════════════
-           DASHBOARD & PFP
-           ══════════════════════════════════════════════════════════ */
-        function applyDashboard() {
-            const s = getSession();
-            if (!s) return;
-            document.getElementById('dashGreetName').textContent = `Hey, ${s.name.split(' ')[0]}`;
-            document.getElementById('dashGreetSub').textContent = `${s.year==='2'?'2nd':'1st'} PU · ${s.rollNo}`;
-            document.getElementById('profileNameDisplay').textContent = s.name;
-            document.getElementById('profileRollDisplay').textContent = `${s.rollNo} · ${s.year==='2'?'2nd':'1st'} PU`;
-
-            const pfp = LS.get('pfp', null);
-            const topImg = document.getElementById('pfpTopImg');
-            const profileImg = document.getElementById('pfpProfileImg');
-            const pfpBtn = document.getElementById('pfpBtn');
-
-            if (pfp && pfp.startsWith('data:image')) {
-                topImg.src = pfp;
-                topImg.style.display = 'block';
-                profileImg.src = pfp;
-                const icon = pfpBtn.querySelector('i');
-                if (icon) icon.remove();
-            } else {
-                topImg.style.display = 'none';
-                if (!pfpBtn.querySelector('i')) {
-                    const icon = document.createElement('i');
-                    icon.className = 'fa-solid fa-user';
-                    pfpBtn.appendChild(icon);
-                }
-                const initial = s.name.charAt(0).toUpperCase();
-                const svg =
-                    `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96"><rect width="96" height="96" fill="%23111"/><text x="48" y="48" font-family="Arial" font-size="40" fill="white" text-anchor="middle" dominant-baseline="central">${initial}</text></svg>`;
-                profileImg.src = svg;
-            }
-        }
-
-        document.getElementById('checkResultBtn').addEventListener('click', () => openExamSelect());
-        document.getElementById('timetableBtn').addEventListener('click', () => openTimetable());
-        document.getElementById('fabAi').addEventListener('click', () => { window.location.href = './proton.html'; });
-
-        /* ══════════════════════════════════════════════════════════
-           PROFILE
-           ══════════════════════════════════════════════════════════ */
-        document.getElementById('pfpBtn').addEventListener('click', () => { applyDashboard();
-            showScreen('profileScreen'); });
-        document.getElementById('pfpEditTrigger').addEventListener('click', () => document.getElementById('pfpFileInput')
-            .click());
-
-        function compressImageToDataUrl(file, maxDim = 320, quality = 0.72) {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onerror = () => reject(new Error('Could not read file'));
-                reader.onload = () => {
-                    const img = new Image();
-                    img.onerror = () => reject(new Error('Could not decode image'));
-                    img.onload = () => {
-                        let { width, height } = img;
-                        if (width > height && width > maxDim) { height = Math.round(height * (maxDim / width));
-                            width = maxDim; } else if (height >= width && height > maxDim) { width = Math.round(
-                                width * (maxDim / height));
-                            height = maxDim; }
-                        const canvas = document.createElement('canvas');
-                        canvas.width = width;
-                        canvas.height = height;
-                        const ctx = canvas.getContext('2d');
-                        ctx.drawImage(img, 0, 0, width, height);
-                        resolve(canvas.toDataURL('image/jpeg', quality));
-                    };
-                    img.src = reader.result;
-                };
-                reader.readAsDataURL(file);
-            });
-        }
-
-        document.getElementById('pfpFileInput').addEventListener('change', async (e) => {
-            const file = e.target.files[0];
-            if (!file) return;
-            try {
-                const dataUrl = await compressImageToDataUrl(file);
-                const saved = LS.set('pfp', dataUrl);
-                if (!saved) { alert("Couldn't save that photo — try a different picture.");
-                    e.target.value = ''; return; }
-                document.getElementById('pfpProfileImg').src = dataUrl;
-                document.getElementById('pfpTopImg').src = dataUrl;
-                document.getElementById('pfpTopImg').style.display = 'block';
-                const btn = document.getElementById('pfpBtn');
-                const icon = btn.querySelector('i');
-                if (icon) icon.remove();
-            } catch (err) { console.error(err);
-                alert("Something went wrong processing that photo."); }
-            e.target.value = '';
-        });
-
-        document.getElementById('darkToggle').addEventListener('change', (e) => { LS.set('dark_mode', e.target.checked);
-            applyTheme(); });
-        document.getElementById('logoutBtn').addEventListener('click', () => {
-            if (!confirm('Log out of this account?')) return;
-            localStorage.removeItem('pu_session');
-            showScreen('loginScreen');
-        });
-
-        /* ══════════════════════════════════════════════════════════
-           EXAM CATEGORY + SELECT
-           ══════════════════════════════════════════════════════════ */
-        const dataCache = {};
-
-        function loadJson(file) {
-            if (file in dataCache) return Promise.resolve(dataCache[file]);
-            return fetch(file).then(r => { if (!r.ok) throw new Error('missing'); return r.json(); })
-                .then(d => { dataCache[file] = d; return d; }).catch(() => { dataCache[file] = null; return null; });
-        }
-        const CATEGORY_FILES = { jee: './jee1pu.json', kcet: './kcet1pu.json', boards: './boards1pu.json' };
-        const CATEGORY_LABELS = { jee: 'NEET / JEE', kcet: 'KCET', boards: 'Boards' };
-        let activeCategory = 'jee';
-
-        async function openExamSelect() {
-            showScreen('examSelectScreen');
-            const s = getSession();
-            activeCategory = (s && s.track === 'neet') ? 'jee' : (s && s.track) || 'jee';
-            renderCategoryPills();
-            await renderExamList(activeCategory);
-        }
-
-        function renderCategoryPills() {
-            document.querySelectorAll('#categoryPills .pill-tab').forEach(p => {
-                p.classList.toggle('active', p.getAttribute('data-cat') === activeCategory);
-            });
-        }
-        document.querySelectorAll('#categoryPills .pill-tab').forEach(pill => {
-            pill.addEventListener('click', async () => {
-                activeCategory = pill.getAttribute('data-cat');
-                renderCategoryPills();
-                await renderExamList(activeCategory);
-            });
-        });
-
-        async function renderExamList(category) {
-            const list = document.getElementById('examChipList');
-            list.innerHTML = '<div class="empty-note">Loading…</div>';
-            const data = await loadJson(CATEGORY_FILES[category]);
-            if (!data || !data.exams || !data.exams.length) {
-                list.innerHTML =
-                    `<div class="empty-note"><i class="fa-regular fa-folder-open" style="font-size:1.4rem;display:block;margin-bottom:10px;"></i>No ${CATEGORY_LABELS[category]} results published yet. Check back soon.</div>`;
-                return;
-            }
-            list.innerHTML = data.exams.map(ex =>
-                `<div class="exam-chip" data-code="${ex.code}">
+async function renderExamList(category) {
+    const list = document.getElementById('examChipList');
+    list.innerHTML = '<div class="empty-note">Loading…</div>';
+    const data = await loadJson(CATEGORY_FILES[category]);
+    if (!data || !data.exams || !data.exams.length) {
+        list.innerHTML =
+            `<div class="empty-note"><i class="fa-regular fa-folder-open" style="font-size:1.4rem;display:block;margin-bottom:10px;"></i>No ${CATEGORY_LABELS[category]} results published yet. Check back soon.</div>`;
+        return;
+    }
+    list.innerHTML = data.exams.map(ex =>
+        `<div class="exam-chip" data-code="${ex.code}">
             <div class="ec-icon"><i class="fa-solid fa-file-lines"></i></div>
             <div>
               <div class="ec-title">${ex.shortName}</div>
               <div class="ec-sub">${ex.subjects.length} subjects · ${ex.markingScheme || (ex.maxMarksPerSubject+'/subject')}</div>
             </div>
           </div>`
-            ).join('');
-            list.querySelectorAll('.exam-chip').forEach(chip => {
-                chip.addEventListener('click', () => {
-                    const exam = data.exams.find(e => e.code === chip.getAttribute('data-code'));
-                    openRollEntry(exam, category);
-                });
-            });
+    ).join('');
+    list.querySelectorAll('.exam-chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+            const exam = data.exams.find(e => e.code === chip.getAttribute('data-code'));
+            openRollEntry(exam, category);
+        });
+    });
+}
+
+/* ══════════════════════════════════════════════════════════
+   ROLL ENTRY
+   ══════════════════════════════════════════════════════════ */
+let pendingExam = null,
+    pendingCategory = null;
+
+function openRollEntry(exam, category) {
+    pendingExam = exam;
+    pendingCategory = category;
+    document.getElementById('rollEntryTitle').textContent = exam.shortName;
+    document.getElementById('rollEntrySub').textContent = `Enter your roll number to view ${exam.displayName}`;
+    const input = document.getElementById('rollEntryInput');
+    input.value = LS.get('last_roll_search', getSession()?.rollNo || '');
+    document.getElementById('rollEntryError').style.display = 'none';
+    showScreen('rollEntryScreen');
+    setTimeout(() => input.focus(), 300);
+}
+document.getElementById('rollEntrySubmit').addEventListener('click', submitRollEntry);
+document.getElementById('rollEntryInput').addEventListener('keydown', e => { if (e.key === 'Enter')
+        submitRollEntry(); });
+
+async function submitRollEntry() {
+    const roll = document.getElementById('rollEntryInput').value.trim();
+    const errBox = document.getElementById('rollEntryError');
+    errBox.style.display = 'none';
+    if (!roll || !pendingExam) return;
+    LS.set('last_roll_search', roll);
+    try {
+        const res = await fetch(`./${pendingExam.resultsFile}`);
+        if (!res.ok) throw new Error('missing');
+        const data = await res.json();
+        const record = data.results.find(r => r.rollNo.toLowerCase() === roll.toLowerCase());
+        if (!record) {
+            errBox.textContent = `No result found for roll number "${roll}" in ${pendingExam.shortName}.`;
+            errBox.style.display = 'block';
+            return;
         }
+        await renderResult(data, record, pendingExam);
+        showScreen('resultScreen');
+    } catch (e) {
+        errBox.textContent = `Couldn't load results right now. Please try again.`;
+        errBox.style.display = 'block';
+    }
+}
 
-        /* ══════════════════════════════════════════════════════════
-           ROLL ENTRY
-           ══════════════════════════════════════════════════════════ */
-        let pendingExam = null,
-            pendingCategory = null;
+/* ══════════════════════════════════════════════════════════
+   RESULT DISPLAY + CHARTS
+   ══════════════════════════════════════════════════════════ */
+function subjLabel(s) { return s.charAt(0) + s.slice(1).toLowerCase(); }
 
-        function openRollEntry(exam, category) {
-            pendingExam = exam;
-            pendingCategory = category;
-            document.getElementById('rollEntryTitle').textContent = exam.shortName;
-            document.getElementById('rollEntrySub').textContent = `Enter your roll number to view ${exam.displayName}`;
-            const input = document.getElementById('rollEntryInput');
-            input.value = LS.get('last_roll_search', getSession()?.rollNo || '');
-            document.getElementById('rollEntryError').style.display = 'none';
-            showScreen('rollEntryScreen');
-            setTimeout(() => input.focus(), 300);
-        }
-        document.getElementById('rollEntrySubmit').addEventListener('click', submitRollEntry);
-        document.getElementById('rollEntryInput').addEventListener('keydown', e => { if (e.key === 'Enter')
-                submitRollEntry(); });
-
-        async function submitRollEntry() {
-            const roll = document.getElementById('rollEntryInput').value.trim();
-            const errBox = document.getElementById('rollEntryError');
-            errBox.style.display = 'none';
-            if (!roll || !pendingExam) return;
-            LS.set('last_roll_search', roll);
-            try {
-                const res = await fetch(`./${pendingExam.resultsFile}`);
-                if (!res.ok) throw new Error('missing');
-                const data = await res.json();
-                const record = data.results.find(r => r.rollNo.toLowerCase() === roll.toLowerCase());
-                if (!record) {
-                    errBox.textContent = `No result found for roll number "${roll}" in ${pendingExam.shortName}.`;
-                    errBox.style.display = 'block';
-                    return;
-                }
-                await renderResult(data, record, pendingExam);
-                showScreen('resultScreen');
-            } catch (e) {
-                errBox.textContent = `Couldn't load results right now. Please try again.`;
-                errBox.style.display = 'block';
-            }
-        }
-
-        /* ══════════════════════════════════════════════════════════
-           RESULT DISPLAY + CHARTS
-           ══════════════════════════════════════════════════════════ */
-        function subjLabel(s) { return s.charAt(0) + s.slice(1).toLowerCase(); }
-
-        async function renderResult(dataset, record, exam) {
-            document.getElementById('resultExamTitle').textContent = exam.shortName;
-            document.getElementById('resultName').textContent = record.name;
-            document.getElementById('resultMeta').textContent = `${record.rollNo} · ${exam.displayName}`;
-            document.getElementById('resultGrade').textContent = `Grade ${record.grade}`;
-            document.getElementById('resultTotal').textContent = `${record.total}`;
-            document.getElementById('resultPct').textContent = `${record.percentage}%`;
-            document.getElementById('resultRank').textContent = `#${record.rank}`;
-            const table = document.getElementById('marksTable');
-            table.innerHTML = dataset.subjects.map(subj => {
-                const m = record.marks[subj];
-                const breakdown = (m && typeof m === 'object') ?
-                    `<span class="ms-break">+${m.positive} / -${m.negative}</span>` : '';
-                const total = (m && typeof m === 'object') ? m.total : m;
-                return `<div class="marks-row">
+async function renderResult(dataset, record, exam) {
+    document.getElementById('resultExamTitle').textContent = exam.shortName;
+    document.getElementById('resultName').textContent = record.name;
+    document.getElementById('resultMeta').textContent = `${record.rollNo} · ${exam.displayName}`;
+    document.getElementById('resultGrade').textContent = `Grade ${record.grade}`;
+    document.getElementById('resultTotal').textContent = `${record.total}`;
+    document.getElementById('resultPct').textContent = `${record.percentage}%`;
+    document.getElementById('resultRank').textContent = `#${record.rank}`;
+    const table = document.getElementById('marksTable');
+    table.innerHTML = dataset.subjects.map(subj => {
+        const m = record.marks[subj];
+        const breakdown = (m && typeof m === 'object') ?
+            `<span class="ms-break">+${m.positive} / -${m.negative}</span>` : '';
+        const total = (m && typeof m === 'object') ? m.total : m;
+        return `<div class="marks-row">
               <div class="marks-subj">${subjLabel(subj)}${breakdown}</div>
               <div class="marks-val">${total} <span class="mv-max">/ ${dataset.maxPerSubject}</span></div>
             </div>`;
-            }).join('');
+    }).join('');
 
-            const princiCard = document.getElementById('princiCard');
-            princiCard.style.display = 'none';
-            if (exam.princiMsgFile) {
-                const msgs = await loadJson(exam.princiMsgFile);
-                if (msgs && msgs.messages) {
-                    const found = msgs.messages.find(m => m.rollNo.toLowerCase() === record.rollNo.toLowerCase() && m
-                        .pdf === exam.pdfName);
-                    if (found) {
-                        document.getElementById('princiMsg').textContent = found.message;
-                        princiCard.style.display = 'block';
-                    }
-                }
+    const princiCard = document.getElementById('princiCard');
+    princiCard.style.display = 'none';
+    if (exam.princiMsgFile) {
+        const msgs = await loadJson(exam.princiMsgFile);
+        if (msgs && msgs.messages) {
+            const found = msgs.messages.find(m => m.rollNo.toLowerCase() === record.rollNo.toLowerCase() && m
+                .pdf === exam.pdfName);
+            if (found) {
+                document.getElementById('princiMsg').textContent = found.message;
+                princiCard.style.display = 'block';
             }
-
-            // Draw result charts using the marks from this record
-            // We need subject names and scores
-            const subjects = dataset.subjects; // array of subject keys
-            const scores = subjects.map(subj => {
-                const m = record.marks[subj];
-                return (m && typeof m === 'object') ? m.total : m;
-            });
-            drawCharts('result', subjects, scores);
         }
+    }
 
-        /* ══════════════════════════════════════════════════════════
-           TIMETABLE
-           ══════════════════════════════════════════════════════════ */
-        async function openTimetable() {
-            showScreen('timetableScreen');
-            const body = document.getElementById('timetableBody');
-            body.innerHTML = '<div class="empty-note">Loading…</div>';
-            const data = await loadJson('./timetable1pu.json');
-            if (!data || !data.events || !data.events.length) {
-                body.innerHTML = '<div class="empty-note">No upcoming tests scheduled right now.</div>';
-                return;
-            }
-            body.innerHTML = data.events.map(ev => {
-                const d = new Date(ev.date);
-                const day = d.getDate();
-                const mon = d.toLocaleDateString('en-IN', { month: 'short' });
-                return `<div class="tt-row">
+    // Draw result charts using the marks from this record
+    const subjects = dataset.subjects;
+    const scores = subjects.map(subj => {
+        const m = record.marks[subj];
+        return (m && typeof m === 'object') ? m.total : m;
+    });
+    drawCharts('result', subjects, scores);
+}
+
+/* ══════════════════════════════════════════════════════════
+   TIMETABLE
+   ══════════════════════════════════════════════════════════ */
+async function openTimetable() {
+    showScreen('timetableScreen');
+    const body = document.getElementById('timetableBody');
+    body.innerHTML = '<div class="empty-note">Loading…</div>';
+    const data = await loadJson('./timetable1pu.json');
+    if (!data || !data.events || !data.events.length) {
+        body.innerHTML = '<div class="empty-note">No upcoming tests scheduled right now.</div>';
+        return;
+    }
+    body.innerHTML = data.events.map(ev => {
+        const d = new Date(ev.date);
+        const day = d.getDate();
+        const mon = d.toLocaleDateString('en-IN', { month: 'short' });
+        return `<div class="tt-row">
               <div class="tt-date"><div class="tt-day">${day}</div><div class="tt-mon">${mon}</div></div>
               <div class="tt-info"><div class="tt-title">${ev.title}</div><div class="tt-type">${ev.type}</div></div>
               ${ev.tag ? `<span class="tt-tag">${ev.tag}</span>` : ''}
             </div>`;
-            }).join('');
-        }
-        (async function checkWeekBadge() {
-            const data = await loadJson('./timetable1pu.json');
-            if (data && data.events && data.events.some(e => e.tag)) {
-                document.getElementById('ttWeekBadge').style.display = 'inline-flex';
-            }
-        })();
+    }).join('');
+}
+(async function checkWeekBadge() {
+    const data = await loadJson('./timetable1pu.json');
+    if (data && data.events && data.events.some(e => e.tag)) {
+        document.getElementById('ttWeekBadge').style.display = 'inline-flex';
+    }
+})();
 
-        /* ══════════════════════════════════════════════════════════
-           BACK BUTTONS
-           ══════════════════════════════════════════════════════════ */
-        document.querySelectorAll('[data-back]').forEach(btn => btn.addEventListener('click', () => history.back()));
+/* ══════════════════════════════════════════════════════════
+   BACK BUTTONS
+   ══════════════════════════════════════════════════════════ */
+document.querySelectorAll('[data-back]').forEach(btn => btn.addEventListener('click', () => history.back()));
 
-        /* ══════════════════════════════════════════════════════════
-           ══════════════════════════════════════════════════════════
-           GRAPH DRAWING ENGINE (shared)
-           ══════════════════════════════════════════════════════════
-           ══════════════════════════════════════════════════════════ */
+/* ══════════════════════════════════════════════════════════
+   GRAPH DRAWING ENGINE (shared)
+   ══════════════════════════════════════════════════════════ */
 
-        // roundRect polyfill
-        if (!CanvasRenderingContext2D.prototype.roundRect) {
-            CanvasRenderingContext2D.prototype.roundRect = function(x, y, w, h, radii) {
-                const r = typeof radii === 'number' ? radii : (radii ? radii[0] : 0) || 0;
-                this.moveTo(x + r, y);
-                this.lineTo(x + w - r, y);
-                this.quadraticCurveTo(x + w, y, x + w, y + r);
-                this.lineTo(x + w, y + h - r);
-                this.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
-                this.lineTo(x + r, y + h);
-                this.quadraticCurveTo(x, y + h, x, y + h - r);
-                this.lineTo(x, y + r);
-                this.quadraticCurveTo(x, y, x + r, y);
-                return this;
-            };
-        }
+if (!CanvasRenderingContext2D.prototype.roundRect) {
+    CanvasRenderingContext2D.prototype.roundRect = function(x, y, w, h, radii) {
+        const r = typeof radii === 'number' ? radii : (radii ? radii[0] : 0) || 0;
+        this.moveTo(x + r, y);
+        this.lineTo(x + w - r, y);
+        this.quadraticCurveTo(x + w, y, x + w, y + r);
+        this.lineTo(x + w, y + h - r);
+        this.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+        this.lineTo(x + r, y + h);
+        this.quadraticCurveTo(x, y + h, x, y + h - r);
+        this.lineTo(x, y + r);
+        this.quadraticCurveTo(x, y, x + r, y);
+        return this;
+    };
+}
 
-        function getThemeColors() {
-            const isDark = document.documentElement.getAttribute('data-theme') !== 'light';
-            return {
-                bg: isDark ? '#0a0a0a' : '#ffffff',
-                text: isDark ? '#ffffff' : '#0a0a0a',
-                textMuted: isDark ? '#8a8a8a' : '#6b6b6f',
-                border: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)',
-                green: '#30d158',
-                red: '#ff453a',
-                surface: isDark ? '#111' : '#f0f0f2',
-            };
-        }
+function getThemeColors() {
+    const isDark = document.documentElement.getAttribute('data-theme') !== 'light';
+    return {
+        bg: isDark ? '#0a0a0a' : '#ffffff',
+        text: isDark ? '#ffffff' : '#0a0a0a',
+        textMuted: isDark ? '#8a8a8a' : '#6b6b6f',
+        border: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)',
+        green: '#30d158',
+        red: '#ff453a',
+        surface: isDark ? '#111' : '#f0f0f2',
+    };
+}
 
-        function drawCharts(prefix, labels, scores) {
-            // prefix: 'result' or 'profile'
-            const barId = prefix + 'BarChart';
-            const lineId = prefix + 'LineChart';
-            const donutId = prefix + 'DonutChart';
+function drawCharts(prefix, labels, scores) {
+    const barId = prefix + 'BarChart';
+    const lineId = prefix + 'LineChart';
+    const donutId = prefix + 'DonutChart';
 
-            drawBarChart(barId, labels, scores);
-            drawLineChart(lineId, labels, scores);
-            drawDonutChart(donutId, labels, scores);
-        }
+    drawBarChart(barId, labels, scores);
+    drawLineChart(lineId, labels, scores);
+    drawDonutChart(donutId, labels, scores);
+}
 
-        function drawBarChart(canvasId, labels, scores) {
-            const canvas = document.getElementById(canvasId);
-            if (!canvas) return;
-            const ctx = canvas.getContext('2d');
-            const rect = canvas.parentElement.getBoundingClientRect();
-            const w = canvas.width = canvas.clientWidth || 400;
-            const h = canvas.height = canvas.clientHeight || 300;
-            const dpr = window.devicePixelRatio || 1;
-            canvas.width = w * dpr;
-            canvas.height = h * dpr;
-            canvas.style.width = w + 'px';
-            canvas.style.height = h + 'px';
-            ctx.scale(dpr, dpr);
+function drawBarChart(canvasId, labels, scores) {
+    const canvas = document.getElementById(canvasId);
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const rect = canvas.parentElement.getBoundingClientRect();
+    const w = canvas.width = canvas.clientWidth || 400;
+    const h = canvas.height = canvas.clientHeight || 300;
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = w * dpr;
+    canvas.height = h * dpr;
+    canvas.style.width = w + 'px';
+    canvas.style.height = h + 'px';
+    ctx.scale(dpr, dpr);
 
-            const theme = getThemeColors();
-            const pad = { top: 24, bottom: 36, left: 36, right: 16 };
-            const chartW = w - pad.left - pad.right;
-            const chartH = h - pad.top - pad.bottom;
-            const barCount = scores.length;
-            const gap = 6;
-            const barW = Math.min((chartW - gap * (barCount - 1)) / barCount, 40);
-            const totalBarSpace = barW * barCount + gap * (barCount - 1);
-            const offsetX = (chartW - totalBarSpace) / 2;
+    const theme = getThemeColors();
+    const pad = { top: 24, bottom: 36, left: 36, right: 16 };
+    const chartW = w - pad.left - pad.right;
+    const chartH = h - pad.top - pad.bottom;
+    const barCount = scores.length;
+    const gap = 6;
+    const barW = Math.min((chartW - gap * (barCount - 1)) / barCount, 40);
+    const totalBarSpace = barW * barCount + gap * (barCount - 1);
+    const offsetX = (chartW - totalBarSpace) / 2;
 
-            ctx.clearRect(0, 0, w, h);
-            ctx.fillStyle = theme.bg;
-            ctx.fillRect(0, 0, w, h);
+    ctx.clearRect(0, 0, w, h);
+    ctx.fillStyle = theme.bg;
+    ctx.fillRect(0, 0, w, h);
 
-            if (scores.every(v => v === 0) || scores.length === 0) {
-                ctx.fillStyle = theme.textMuted;
-                ctx.font = '12px "DM Mono", monospace';
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
-                ctx.fillText('No data available', w / 2, h / 2);
-                return;
-            }
+    if (scores.every(v => v === 0) || scores.length === 0) {
+        ctx.fillStyle = theme.textMuted;
+        ctx.font = '12px "DM Mono", monospace';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('No data available', w / 2, h / 2);
+        return;
+    }
 
-            const maxVal = Math.max(100, ...scores);
-            const yScale = chartH / maxVal;
+    const maxVal = Math.max(100, ...scores);
+    const yScale = chartH / maxVal;
 
-            // Grid
-            ctx.strokeStyle = theme.border;
-            ctx.lineWidth = 0.5;
-            for (let i = 0; i <= 4; i++) {
-                const y = pad.top + chartH - (i / 4) * chartH;
-                ctx.beginPath();
-                ctx.moveTo(pad.left, y);
-                ctx.lineTo(w - pad.right, y);
-                ctx.stroke();
-                ctx.fillStyle = theme.textMuted;
-                ctx.font = '9px "DM Mono", monospace';
-                ctx.textAlign = 'right';
-                ctx.textBaseline = 'middle';
-                ctx.fillText(Math.round((i / 4) * maxVal), pad.left - 6, y);
-            }
+    ctx.strokeStyle = theme.border;
+    ctx.lineWidth = 0.5;
+    for (let i = 0; i <= 4; i++) {
+        const y = pad.top + chartH - (i / 4) * chartH;
+        ctx.beginPath();
+        ctx.moveTo(pad.left, y);
+        ctx.lineTo(w - pad.right, y);
+        ctx.stroke();
+        ctx.fillStyle = theme.textMuted;
+        ctx.font = '9px "DM Mono", monospace';
+        ctx.textAlign = 'right';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(Math.round((i / 4) * maxVal), pad.left - 6, y);
+    }
 
-            // Bars
-            scores.forEach((val, i) => {
-                const x = pad.left + offsetX + i * (barW + gap);
-                const barH = val * yScale;
-                const y = pad.top + chartH - barH;
-                const isGood = val >= 60;
-                const color = isGood ? theme.green : theme.red;
+    scores.forEach((val, i) => {
+        const x = pad.left + offsetX + i * (barW + gap);
+        const barH = val * yScale;
+        const y = pad.top + chartH - barH;
+        const isGood = val >= 60;
+        const color = isGood ? theme.green : theme.red;
 
-                ctx.shadowColor = isGood ? 'rgba(48,209,88,0.15)' : 'rgba(255,69,58,0.15)';
-                ctx.shadowBlur = 8;
-                ctx.fillStyle = color;
-                ctx.beginPath();
-                ctx.roundRect(x, y, barW, barH, [3, 3, 0, 0]);
-                ctx.fill();
-                ctx.shadowBlur = 0;
+        ctx.shadowColor = isGood ? 'rgba(48,209,88,0.15)' : 'rgba(255,69,58,0.15)';
+        ctx.shadowBlur = 8;
+        ctx.fillStyle = color;
+        ctx.beginPath();
+        ctx.roundRect(x, y, barW, barH, [3, 3, 0, 0]);
+        ctx.fill();
+        ctx.shadowBlur = 0;
 
-                ctx.fillStyle = theme.text;
-                ctx.font = 'bold 10px "DM Mono", monospace';
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'bottom';
-                ctx.fillText(val, x + barW / 2, y - 4);
+        ctx.fillStyle = theme.text;
+        ctx.font = 'bold 10px "DM Mono", monospace';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'bottom';
+        ctx.fillText(val, x + barW / 2, y - 4);
 
-                ctx.fillStyle = theme.textMuted;
-                ctx.font = '9px "DM Mono", monospace';
-                ctx.textBaseline = 'top';
-                const label = labels[i] ? labels[i].slice(0, 4) : '';
-                ctx.fillText(label, x + barW / 2, pad.top + chartH + 6);
-            });
-        }
+        ctx.fillStyle = theme.textMuted;
+        ctx.font = '9px "DM Mono", monospace';
+        ctx.textBaseline = 'top';
+        const label = labels[i] ? labels[i].slice(0, 4) : '';
+        ctx.fillText(label, x + barW / 2, pad.top + chartH + 6);
+    });
+}
 
-        function drawLineChart(canvasId, labels, scores) {
-            const canvas = document.getElementById(canvasId);
-            if (!canvas) return;
-            const ctx = canvas.getContext('2d');
-            const rect = canvas.parentElement.getBoundingClientRect();
-            const w = canvas.width = canvas.clientWidth || 400;
-            const h = canvas.height = canvas.clientHeight || 300;
-            const dpr = window.devicePixelRatio || 1;
-            canvas.width = w * dpr;
-            canvas.height = h * dpr;
-            canvas.style.width = w + 'px';
-            canvas.style.height = h + 'px';
-            ctx.scale(dpr, dpr);
+function drawLineChart(canvasId, labels, scores) {
+    const canvas = document.getElementById(canvasId);
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const rect = canvas.parentElement.getBoundingClientRect();
+    const w = canvas.width = canvas.clientWidth || 400;
+    const h = canvas.height = canvas.clientHeight || 300;
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = w * dpr;
+    canvas.height = h * dpr;
+    canvas.style.width = w + 'px';
+    canvas.style.height = h + 'px';
+    ctx.scale(dpr, dpr);
 
-            const theme = getThemeColors();
-            const pad = { top: 28, bottom: 36, left: 36, right: 20 };
-            const chartW = w - pad.left - pad.right;
-            const chartH = h - pad.top - pad.bottom;
+    const theme = getThemeColors();
+    const pad = { top: 28, bottom: 36, left: 36, right: 20 };
+    const chartW = w - pad.left - pad.right;
+    const chartH = h - pad.top - pad.bottom;
 
-            ctx.clearRect(0, 0, w, h);
-            ctx.fillStyle = theme.bg;
-            ctx.fillRect(0, 0, w, h);
+    ctx.clearRect(0, 0, w, h);
+    ctx.fillStyle = theme.bg;
+    ctx.fillRect(0, 0, w, h);
 
-            if (scores.every(v => v === 0) || scores.length === 0) {
-                ctx.fillStyle = theme.textMuted;
-                ctx.font = '12px "DM Mono", monospace';
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
-                ctx.fillText('No data available', w / 2, h / 2);
-                return;
-            }
+    if (scores.every(v => v === 0) || scores.length === 0) {
+        ctx.fillStyle = theme.textMuted;
+        ctx.font = '12px "DM Mono", monospace';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('No data available', w / 2, h / 2);
+        return;
+    }
 
-            const maxVal = Math.max(100, ...scores);
-            const yScale = chartH / maxVal;
-            const xStep = chartW / (scores.length - 1 || 1);
+    const maxVal = Math.max(100, ...scores);
+    const yScale = chartH / maxVal;
+    const xStep = chartW / (scores.length - 1 || 1);
 
-            // Grid
-            ctx.strokeStyle = theme.border;
-            ctx.lineWidth = 0.5;
-            for (let i = 0; i <= 4; i++) {
-                const y = pad.top + chartH - (i / 4) * chartH;
-                ctx.beginPath();
-                ctx.moveTo(pad.left, y);
-                ctx.lineTo(w - pad.right, y);
-                ctx.stroke();
-                ctx.fillStyle = theme.textMuted;
-                ctx.font = '9px "DM Mono", monospace';
-                ctx.textAlign = 'right';
-                ctx.textBaseline = 'middle';
-                ctx.fillText(Math.round((i / 4) * maxVal), pad.left - 6, y);
-            }
+    ctx.strokeStyle = theme.border;
+    ctx.lineWidth = 0.5;
+    for (let i = 0; i <= 4; i++) {
+        const y = pad.top + chartH - (i / 4) * chartH;
+        ctx.beginPath();
+        ctx.moveTo(pad.left, y);
+        ctx.lineTo(w - pad.right, y);
+        ctx.stroke();
+        ctx.fillStyle = theme.textMuted;
+        ctx.font = '9px "DM Mono", monospace';
+        ctx.textAlign = 'right';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(Math.round((i / 4) * maxVal), pad.left - 6, y);
+    }
 
-            const points = scores.map((v, i) => ({
-                x: pad.left + i * xStep,
-                y: pad.top + chartH - v * yScale
-            }));
+    const points = scores.map((v, i) => ({
+        x: pad.left + i * xStep,
+        y: pad.top + chartH - v * yScale
+    }));
 
-            // Gradient fill
-            const grad = ctx.createLinearGradient(0, pad.top, 0, pad.top + chartH);
-            grad.addColorStop(0, 'rgba(48,209,88,0.25)');
-            grad.addColorStop(1, 'rgba(48,209,88,0.01)');
-            ctx.fillStyle = grad;
-            ctx.beginPath();
-            ctx.moveTo(points[0].x, pad.top + chartH);
-            points.forEach(p => ctx.lineTo(p.x, p.y));
-            ctx.lineTo(points[points.length - 1].x, pad.top + chartH);
-            ctx.closePath();
-            ctx.fill();
+    const grad = ctx.createLinearGradient(0, pad.top, 0, pad.top + chartH);
+    grad.addColorStop(0, 'rgba(48,209,88,0.25)');
+    grad.addColorStop(1, 'rgba(48,209,88,0.01)');
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.moveTo(points[0].x, pad.top + chartH);
+    points.forEach(p => ctx.lineTo(p.x, p.y));
+    ctx.lineTo(points[points.length - 1].x, pad.top + chartH);
+    ctx.closePath();
+    ctx.fill();
 
-            // Line
-            ctx.strokeStyle = theme.green;
-            ctx.lineWidth = 2.5;
-            ctx.shadowColor = 'rgba(48,209,88,0.3)';
-            ctx.shadowBlur = 10;
-            ctx.beginPath();
-            points.forEach((p, i) => { i === 0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y); });
-            ctx.stroke();
-            ctx.shadowBlur = 0;
+    ctx.strokeStyle = theme.green;
+    ctx.lineWidth = 2.5;
+    ctx.shadowColor = 'rgba(48,209,88,0.3)';
+    ctx.shadowBlur = 10;
+    ctx.beginPath();
+    points.forEach((p, i) => { i === 0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y); });
+    ctx.stroke();
+    ctx.shadowBlur = 0;
 
-            // Points
-            points.forEach((p, i) => {
-                const val = scores[i];
-                const isGood = val >= 60;
-                const color = isGood ? theme.green : theme.red;
+    points.forEach((p, i) => {
+        const val = scores[i];
+        const isGood = val >= 60;
+        const color = isGood ? theme.green : theme.red;
 
-                ctx.shadowColor = isGood ? 'rgba(48,209,88,0.3)' : 'rgba(255,69,58,0.3)';
-                ctx.shadowBlur = 12;
-                ctx.fillStyle = color;
-                ctx.beginPath();
-                ctx.arc(p.x, p.y, 5, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.shadowBlur = 0;
+        ctx.shadowColor = isGood ? 'rgba(48,209,88,0.3)' : 'rgba(255,69,58,0.3)';
+        ctx.shadowBlur = 12;
+        ctx.fillStyle = color;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 5, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.shadowBlur = 0;
 
-                ctx.fillStyle = theme.bg;
-                ctx.beginPath();
-                ctx.arc(p.x, p.y, 2.5, 0, Math.PI * 2);
-                ctx.fill();
+        ctx.fillStyle = theme.bg;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 2.5, 0, Math.PI * 2);
+        ctx.fill();
 
-                ctx.fillStyle = theme.text;
-                ctx.font = 'bold 9px "DM Mono", monospace';
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'bottom';
-                ctx.fillText(val, p.x, p.y - 8);
+        ctx.fillStyle = theme.text;
+        ctx.font = 'bold 9px "DM Mono", monospace';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'bottom';
+        ctx.fillText(val, p.x, p.y - 8);
 
-                ctx.fillStyle = theme.textMuted;
-                ctx.font = '8px "DM Mono", monospace';
-                ctx.textBaseline = 'top';
-                const label = labels[i] ? labels[i].slice(0, 4) : '';
-                ctx.fillText(label, p.x, pad.top + chartH + 6);
-            });
-        }
+        ctx.fillStyle = theme.textMuted;
+        ctx.font = '8px "DM Mono", monospace';
+        ctx.textBaseline = 'top';
+        const label = labels[i] ? labels[i].slice(0, 4) : '';
+        ctx.fillText(label, p.x, pad.top + chartH + 6);
+    });
+}
 
-        function drawDonutChart(canvasId, labels, scores) {
-            const canvas = document.getElementById(canvasId);
-            if (!canvas) return;
-            const ctx = canvas.getContext('2d');
-            const rect = canvas.parentElement.getBoundingClientRect();
-            const w = canvas.width = canvas.clientWidth || 400;
-            const h = canvas.height = canvas.clientHeight || 300;
-            const dpr = window.devicePixelRatio || 1;
-            canvas.width = w * dpr;
-            canvas.height = h * dpr;
-            canvas.style.width = w + 'px';
-            canvas.style.height = h + 'px';
-            ctx.scale(dpr, dpr);
+function drawDonutChart(canvasId, labels, scores) {
+    const canvas = document.getElementById(canvasId);
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const rect = canvas.parentElement.getBoundingClientRect();
+    const w = canvas.width = canvas.clientWidth || 400;
+    const h = canvas.height = canvas.clientHeight || 300;
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = w * dpr;
+    canvas.height = h * dpr;
+    canvas.style.width = w + 'px';
+    canvas.style.height = h + 'px';
+    ctx.scale(dpr, dpr);
 
-            const theme = getThemeColors();
-            const cx = w / 2;
-            const cy = h / 2 - 4;
-            const radius = Math.min(w, h) * 0.35;
-            const innerRadius = radius * 0.55;
+    const theme = getThemeColors();
+    const cx = w / 2;
+    const cy = h / 2 - 4;
+    const radius = Math.min(w, h) * 0.35;
+    const innerRadius = radius * 0.55;
 
-            ctx.clearRect(0, 0, w, h);
-            ctx.fillStyle = theme.bg;
-            ctx.fillRect(0, 0, w, h);
+    ctx.clearRect(0, 0, w, h);
+    ctx.fillStyle = theme.bg;
+    ctx.fillRect(0, 0, w, h);
 
-            if (scores.every(v => v === 0) || scores.length === 0) {
-                ctx.fillStyle = theme.textMuted;
-                ctx.font = '12px "DM Mono", monospace';
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
-                ctx.fillText('No data available', w / 2, h / 2);
-                return;
-            }
+    if (scores.every(v => v === 0) || scores.length === 0) {
+        ctx.fillStyle = theme.textMuted;
+        ctx.font = '12px "DM Mono", monospace';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('No data available', w / 2, h / 2);
+        return;
+    }
 
-            const total = scores.reduce((a, b) => a + b, 0) || 1;
-            const maxPossible = scores.length * 100;
-            const overallPct = (total / maxPossible) * 100;
+    const total = scores.reduce((a, b) => a + b, 0) || 1;
+    const maxPossible = scores.length * 100;
+    const overallPct = (total / maxPossible) * 100;
 
-            const colors = ['#30d158', '#ff453a', '#ff9f0a', '#0a84ff', '#bf5af2'];
+    const colors = ['#30d158', '#ff453a', '#ff9f0a', '#0a84ff', '#bf5af2'];
 
-            let startAngle = -Math.PI / 2;
+    let startAngle = -Math.PI / 2;
 
-            scores.forEach((val, i) => {
-                if (val === 0) return;
-                const sliceAngle = (val / total) * Math.PI * 2;
-                const endAngle = startAngle + sliceAngle;
+    scores.forEach((val, i) => {
+        if (val === 0) return;
+        const sliceAngle = (val / total) * Math.PI * 2;
+        const endAngle = startAngle + sliceAngle;
 
-                ctx.beginPath();
-                ctx.arc(cx, cy, radius, startAngle, endAngle);
-                ctx.arc(cx, cy, innerRadius, endAngle, startAngle, true);
-                ctx.closePath();
-                ctx.fillStyle = colors[i % colors.length];
-                ctx.shadowColor = 'rgba(0,0,0,0.15)';
-                ctx.shadowBlur = 6;
-                ctx.fill();
-                ctx.shadowBlur = 0;
+        ctx.beginPath();
+        ctx.arc(cx, cy, radius, startAngle, endAngle);
+        ctx.arc(cx, cy, innerRadius, endAngle, startAngle, true);
+        ctx.closePath();
+        ctx.fillStyle = colors[i % colors.length];
+        ctx.shadowColor = 'rgba(0,0,0,0.15)';
+        ctx.shadowBlur = 6;
+        ctx.fill();
+        ctx.shadowBlur = 0;
 
-                const midAngle = startAngle + sliceAngle / 2;
-                const labelR = radius + 18;
-                const lx = cx + Math.cos(midAngle) * labelR;
-                const ly = cy + Math.sin(midAngle) * labelR;
-                const pct = Math.round((val / total) * 100);
-                if (pct > 3) {
-                    ctx.fillStyle = theme.text;
-                    ctx.font = 'bold 8px "DM Mono", monospace';
-                    ctx.textAlign = 'center';
-                    ctx.textBaseline = 'middle';
-                    ctx.fillText(`${pct}%`, lx, ly);
-                }
-                startAngle = endAngle;
-            });
-
-            // Center
-            ctx.shadowBlur = 0;
-            ctx.fillStyle = theme.bg;
-            ctx.beginPath();
-            ctx.arc(cx, cy, innerRadius * 0.75, 0, Math.PI * 2);
-            ctx.fill();
-
+        const midAngle = startAngle + sliceAngle / 2;
+        const labelR = radius + 18;
+        const lx = cx + Math.cos(midAngle) * labelR;
+        const ly = cy + Math.sin(midAngle) * labelR;
+        const pct = Math.round((val / total) * 100);
+        if (pct > 3) {
             ctx.fillStyle = theme.text;
-            ctx.font = 'bold 18px "Space Grotesk", sans-serif';
+            ctx.font = 'bold 8px "DM Mono", monospace';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
-            ctx.fillText(`${Math.round(overallPct)}%`, cx, cy - 4);
+            ctx.fillText(`${pct}%`, lx, ly);
+        }
+        startAngle = endAngle;
+    });
 
+    ctx.shadowBlur = 0;
+    ctx.fillStyle = theme.bg;
+    ctx.beginPath();
+    ctx.arc(cx, cy, innerRadius * 0.75, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.fillStyle = theme.text;
+    ctx.font = 'bold 18px "Space Grotesk", sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(`${Math.round(overallPct)}%`, cx, cy - 4);
+
+    ctx.fillStyle = theme.textMuted;
+    ctx.font = '7px "DM Mono", monospace';
+    ctx.textBaseline = 'top';
+    ctx.fillText('OVERALL', cx, cy + 12);
+
+    const legendY = h - 20;
+    let legendX = 20;
+    const visible = scores.map((val, i) => ({ label: labels[i] || '', color: colors[i % colors.length], val }))
+        .filter(item => item.val > 0);
+    if (visible.length > 0) {
+        const totalLegendWidth = visible.reduce((acc, item) => acc + ctx.measureText(item.label).width + 24, 0);
+        legendX = (w - totalLegendWidth) / 2;
+        visible.forEach((item) => {
+            ctx.fillStyle = item.color;
+            ctx.beginPath();
+            ctx.arc(legendX + 4, legendY - 2, 4, 0, Math.PI * 2);
+            ctx.fill();
             ctx.fillStyle = theme.textMuted;
-            ctx.font = '7px "DM Mono", monospace';
-            ctx.textBaseline = 'top';
-            ctx.fillText('OVERALL', cx, cy + 12);
+            ctx.font = '8px "DM Mono", monospace';
+            ctx.textAlign = 'left';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(item.label, legendX + 12, legendY);
+            legendX += ctx.measureText(item.label).width + 24;
+        });
+    }
+}
 
-            // Legend
-            const legendY = h - 20;
-            let legendX = 20;
-            const visible = scores.map((val, i) => ({ label: labels[i] || '', color: colors[i % colors.length], val }))
-                .filter(item => item.val > 0);
-            if (visible.length > 0) {
-                const totalLegendWidth = visible.reduce((acc, item) => acc + ctx.measureText(item.label).width + 24, 0);
-                legendX = (w - totalLegendWidth) / 2;
-                visible.forEach((item) => {
-                    ctx.fillStyle = item.color;
-                    ctx.beginPath();
-                    ctx.arc(legendX + 4, legendY - 2, 4, 0, Math.PI * 2);
-                    ctx.fill();
-                    ctx.fillStyle = theme.textMuted;
-                    ctx.font = '8px "DM Mono", monospace';
-                    ctx.textAlign = 'left';
-                    ctx.textBaseline = 'middle';
-                    ctx.fillText(item.label, legendX + 12, legendY);
-                    legendX += ctx.measureText(item.label).width + 24;
-                });
-            }
-        }
+/* ══════════════════════════════════════════════════════════
+   PROFILE – LOAD PART-TEST DATA & DRAW OVERVIEW CHARTS
+   ══════════════════════════════════════════════════════════ */
+let partTestDataCache = null;
 
-        /* ══════════════════════════════════════════════════════════
-           PROFILE – LOAD PART-TEST DATA & DRAW OVERVIEW CHARTS
-           ══════════════════════════════════════════════════════════ */
-        let partTestDataCache = null;
+async function loadPartTestData() {
+    if (partTestDataCache) return partTestDataCache;
+    try {
+        const res = await fetch('./results_1pujeeparttest1.json');
+        if (!res.ok) throw new Error('missing');
+        const data = await res.json();
+        partTestDataCache = data;
+        return data;
+    } catch (e) {
+        partTestDataCache = null;
+        return null;
+    }
+}
 
-        async function loadPartTestData() {
-            if (partTestDataCache) return partTestDataCache;
-            try {
-                const res = await fetch('./results_1pujeeparttest1.json');
-                if (!res.ok) throw new Error('missing');
-                const data = await res.json();
-                partTestDataCache = data;
-                return data;
-            } catch (e) {
-                partTestDataCache = null;
-                return null;
-            }
-        }
+async function loadAndDrawProfileCharts() {
+    const s = getSession();
+    if (!s) return;
+    const data = await loadPartTestData();
+    const statsContainer = document.getElementById('profileOverviewStats');
 
-        async function loadAndDrawProfileCharts() {
-            const s = getSession();
-            if (!s) return;
-            const data = await loadPartTestData();
-            const statsContainer = document.getElementById('profileOverviewStats');
+    if (!data || !data.results || data.results.length === 0) {
+        statsContainer.innerHTML =
+            `<div class="stat-badge"><i class="fa-regular fa-circle-xmark"></i> No part‑test data available</div>`;
+        drawCharts('profile', ['—'], [0]);
+        return;
+    }
 
-            if (!data || !data.results || data.results.length === 0) {
-                statsContainer.innerHTML =
-                    `<div class="stat-badge"><i class="fa-regular fa-circle-xmark"></i> No part‑test data available</div>`;
-                // show empty graphs
-                drawCharts('profile', ['—'], [0]);
-                return;
-            }
+    const roll = s.rollNo.toLowerCase();
+    const records = data.results.filter(r => r.rollNo.toLowerCase() === roll);
+    if (records.length === 0) {
+        statsContainer.innerHTML =
+            `<div class="stat-badge"><i class="fa-regular fa-circle-xmark"></i> No part‑tests found for this roll number</div>`;
+        drawCharts('profile', ['—'], [0]);
+        return;
+    }
 
-            // Find all records for this student
-            const roll = s.rollNo.toLowerCase();
-            const records = data.results.filter(r => r.rollNo.toLowerCase() === roll);
-            if (records.length === 0) {
-                statsContainer.innerHTML =
-                    `<div class="stat-badge"><i class="fa-regular fa-circle-xmark"></i> No part‑tests found for this roll number</div>`;
-                drawCharts('profile', ['—'], [0]);
-                return;
-            }
+    const firstRecord = records[0];
+    const subjects = Object.keys(firstRecord.marks).filter(k => k !== 'total' && k !== 'percentage' && k !==
+        'grade');
+    const subjectAverages = subjects.map(subj => {
+        const sum = records.reduce((acc, rec) => {
+            const val = rec.marks[subj];
+            return acc + (typeof val === 'number' ? val : 0);
+        }, 0);
+        return Math.round(sum / records.length);
+    });
 
-            // Compute average scores per subject
-            // Assume all records have the same subject list (use first record's keys)
-            const firstRecord = records[0];
-            const subjects = Object.keys(firstRecord.marks).filter(k => k !== 'total' && k !== 'percentage' && k !==
-            'grade');
-            const subjectAverages = subjects.map(subj => {
-                const sum = records.reduce((acc, rec) => {
-                    const val = rec.marks[subj];
-                    return acc + (typeof val === 'number' ? val : 0);
-                }, 0);
-                return Math.round(sum / records.length);
-            });
+    const avgTotal = Math.round(records.reduce((acc, r) => acc + (r.total || 0), 0) / records.length);
+    const avgPct = Math.round(records.reduce((acc, r) => acc + (r.percentage || 0), 0) / records.length);
 
-            // Overall total and percentage (average of totals)
-            const avgTotal = Math.round(records.reduce((acc, r) => acc + (r.total || 0), 0) / records.length);
-            const avgPct = Math.round(records.reduce((acc, r) => acc + (r.percentage || 0), 0) / records.length);
-
-            // Display stats
-            statsContainer.innerHTML = `
+    statsContainer.innerHTML = `
             <div class="stat-badge"><i class="fa-regular fa-file-lines"></i> Tests: <strong>${records.length}</strong></div>
             <div class="stat-badge"><i class="fa-regular fa-star"></i> Avg Total: <strong>${avgTotal}</strong></div>
             <div class="stat-badge"><i class="fa-regular fa-percent"></i> Avg %: <strong>${avgPct}%</strong></div>
           `;
 
-            // Draw profile charts with subject averages
-            drawCharts('profile', subjects, subjectAverages);
-        }
+    drawCharts('profile', subjects, subjectAverages);
+}
 
-        /* ══════════════════════════════════════════════════════════
-           INIT
-           ══════════════════════════════════════════════════════════ */
-        (function init() {
-            if (isLoggedIn()) {
-                applyDashboard();
-                showScreen('dashboardScreen', false);
-                history.replaceState({ screen: 'dashboardScreen' }, '', '#dashboardScreen');
-            } else {
-                showScreen('loginScreen', false);
-                history.replaceState({ screen: 'loginScreen' }, '', '#loginScreen');
+/* ══════════════════════════════════════════════════════════
+   DEEP‑LINK HANDLER (for Proton "See Full Analysis")
+   ══════════════════════════════════════════════════════════ */
+async function handleDeepLink() {
+    const params = new URLSearchParams(window.location.search);
+    const test = params.get('test');
+    const roll = params.get('roll');
+    if (!test || !roll) return;
+
+    if (test === 'Part Test 1') {
+        try {
+            const res = await fetch('./results_1pujeeparttest1.json');
+            if (!res.ok) throw new Error('missing');
+            const data = await res.json();
+            const record = data.results.find(r => r.rollNo.toLowerCase() === roll.toLowerCase());
+            if (!record) {
+                alert('Result not found for roll ' + roll);
+                return;
             }
-        })();
-    </script>
+            const subjects = Object.keys(record.marks).filter(k => !['total','percentage','grade','rank'].includes(k.toLowerCase()));
+            const exam = {
+                shortName: 'Part Test 1',
+                displayName: 'Part Test 1',
+                resultsFile: 'results_1pujeeparttest1.json',
+                subjects: subjects,
+                maxPerSubject: 100,
+                princiMsgFile: null
+            };
+            await renderResult(data, record, exam);
+            showScreen('resultScreen');
+            window.history.replaceState({}, '', window.location.pathname);
+        } catch (e) {
+            alert('Could not load Part Test 1 data.');
+        }
+    }
+}
+
+/* ══════════════════════════════════════════════════════════
+   INIT
+   ══════════════════════════════════════════════════════════ */
+(function init() {
+    if (isLoggedIn()) {
+        applyDashboard();
+        showScreen('dashboardScreen', false);
+        history.replaceState({ screen: 'dashboardScreen' }, '', '#dashboardScreen');
+        // Check for deep link (from Proton) after dashboard loads
+        handleDeepLink();
+    } else {
+        showScreen('loginScreen', false);
+        history.replaceState({ screen: 'loginScreen' }, '', '#loginScreen');
+    }
+})();
+
+</script>
 </body>
 </html>
