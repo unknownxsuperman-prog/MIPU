@@ -1875,35 +1875,57 @@ async function loadAndDrawProfileCharts() {
    ══════════════════════════════════════════════════════════ */
 async function handleDeepLink() {
     const params = new URLSearchParams(window.location.search);
-    const test = params.get('test');
     const roll = params.get('roll');
-    if (!test || !roll) return;
+    if (!roll) return;
 
-    if (test === 'Part Test 1') {
-        try {
-            const res = await fetch('./results_1pujeeparttest1.json');
+    const cat = params.get('cat');
+    const code = params.get('code');
+    const file = params.get('file');
+
+    try {
+        let exam = null,
+            data = null;
+
+        if (cat && code && CATEGORY_FILES[cat]) {
+            // Category exam (NEET/JEE, KCET, Boards) — look up the exam definition
+            // the same way the normal "Check Result" flow does, so subjects,
+            // maxPerSubject and princiMsgFile all line up correctly.
+            const catData = await loadJson(CATEGORY_FILES[cat]);
+            if (!catData || !catData.exams) throw new Error('missing category data');
+            exam = catData.exams.find(e => e.code === code);
+            if (!exam) throw new Error('exam not found');
+            const res = await fetch(`./${exam.resultsFile}`);
+            if (!res.ok) throw new Error('missing results');
+            data = await res.json();
+        } else if (file) {
+            // Fallback exam (e.g. Part Test 1) — built from URL params directly
+            const res = await fetch('./' + file);
             if (!res.ok) throw new Error('missing');
-            const data = await res.json();
-            const record = data.results.find(r => r.rollNo.toLowerCase() === roll.toLowerCase());
-            if (!record) {
-                alert('Result not found for roll ' + roll);
-                return;
-            }
-            const subjects = Object.keys(record.marks).filter(k => !['total','percentage','grade','rank'].includes(k.toLowerCase()));
-            const exam = {
-                shortName: 'Part Test 1',
-                displayName: 'Part Test 1',
-                resultsFile: 'results_1pujeeparttest1.json',
+            data = await res.json();
+            const subjects = data.subjects || Object.keys((data.results && data.results[0] && data.results[0]
+                .marks) || {}).filter(k => !['total', 'percentage', 'grade', 'rank'].includes(k.toLowerCase()));
+            exam = {
+                shortName: params.get('title') || 'Result',
+                displayName: params.get('title') || 'Result',
+                resultsFile: file,
                 subjects: subjects,
-                maxPerSubject: 100,
+                maxPerSubject: data.maxPerSubject || 100,
                 princiMsgFile: null
             };
-            await renderResult(data, record, exam);
-            showScreen('resultScreen');
-            window.history.replaceState({}, '', window.location.pathname);
-        } catch (e) {
-            alert('Could not load Part Test 1 data.');
+        } else {
+            return;
         }
+
+        const record = data.results.find(r => r.rollNo.toLowerCase() === roll.toLowerCase());
+        if (!record) {
+            alert('Result not found for roll ' + roll);
+            return;
+        }
+        await renderResult(data, record, exam);
+        showScreen('resultScreen');
+        window.history.replaceState({}, '', window.location.pathname);
+    } catch (e) {
+        alert('Could not load that result right now.');
     }
 }
 
