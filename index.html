@@ -394,7 +394,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            margin: 20px 0 30px;
+            margin: 20px 0 10px;
         }
         .profile-pfp {
             width: 96px;
@@ -497,6 +497,42 @@
         }
         .hidden-file-input {
             display: none;
+        }
+
+        /* ─── Profile Analytics Overview ─── */
+        .profile-overview-stats {
+            display: flex;
+            gap: 12px;
+            margin: 18px 0 12px;
+            flex-wrap: wrap;
+        }
+        .profile-overview-stats .stat-badge {
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            border-radius: var(--r-xs);
+            padding: 8px 16px;
+            font-family: var(--font-m);
+            font-size: .7rem;
+            color: var(--text-1);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .profile-overview-stats .stat-badge strong {
+            color: var(--text-0);
+            font-weight: 700;
+        }
+        .profile-graphs-title {
+            font-size: .8rem;
+            font-weight: 700;
+            color: var(--text-0);
+            margin: 18px 0 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .profile-graphs-title i {
+            color: var(--text-3);
         }
 
         /* ─── Pills ─── */
@@ -776,50 +812,12 @@
             flex-shrink: 0;
         }
 
-        /* ═══════════════════════════════════════════════════
-           ANALYTICS – new styles for three graphs
-           ═══════════════════════════════════════════════════ */
-        .analytics-entry-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-bottom: 18px;
-        }
-        .analytics-entry-grid .field-block {
-            margin-bottom: 0;
-        }
-        .analytics-entry-grid .xin {
-            padding: 10px 12px;
-            font-size: 14px;
-        }
-        .analytics-entry-grid .field-mini-label {
-            font-size: .5rem;
-            margin-bottom: 4px;
-        }
-        .analytics-actions {
-            display: flex;
-            gap: 10px;
-            margin: 4px 0 18px;
-        }
-        .analytics-actions .btn-solid {
-            flex: 1;
-            padding: 12px;
-            font-size: .65rem;
-            margin-top: 0;
-        }
-        .analytics-actions .btn-ghost {
-            flex: 0 0 auto;
-            padding: 12px 18px;
-            margin-top: 0;
-            width: auto;
-        }
-
-        /* three graph cards */
+        /* ─── Graph Grid (shared) ─── */
         .graph-grid {
             display: grid;
             grid-template-columns: 1fr;
             gap: 18px;
-            margin-top: 6px;
+            margin: 12px 0 6px;
         }
         @media (min-width: 640px) {
             .graph-grid {
@@ -905,9 +903,10 @@
             opacity: .4;
         }
 
-        /* subtle animation */
-        .graph-card canvas {
-            transition: opacity .3s;
+        .section-divider {
+            border: none;
+            border-top: 1px solid var(--border);
+            margin: 18px 0 10px;
         }
 
         @media (min-width:480px) {
@@ -985,23 +984,13 @@
                 <div class="ac-arrow"><i class="fa-solid fa-chevron-right"></i></div>
             </div>
 
-            <!-- NEW: Analytics card -->
-            <div class="action-card" id="analyticsBtn">
-                <div class="ac-icon"><i class="fa-solid fa-chart-simple"></i></div>
-                <div class="ac-text">
-                    <div class="ac-title">Test Analytics</div>
-                    <div class="ac-sub">Visualize your performance · 3 graphs</div>
-                </div>
-                <div class="ac-arrow"><i class="fa-solid fa-chevron-right"></i></div>
-            </div>
-
         </div>
         <button class="fab-ai" id="fabAi">
             <img src="./logo.svg" alt="AI" onerror="this.style.display='none';this.parentElement.innerHTML='<i class=\'fa-solid fa-wand-magic-sparkles\'></i>';" />
         </button>
     </div>
 
-    <!-- ═══════════════ PROFILE OVERLAY ═══════════════ -->
+    <!-- ═══════════════ PROFILE OVERLAY (with graphs) ═══════════════ -->
     <div class="screen" id="profileScreen">
         <div class="overlay-header">
             <button class="icon-btn" data-back><i class="fa-solid fa-arrow-left"></i></button>
@@ -1024,6 +1013,28 @@
                     </label>
                 </div>
             </div>
+
+            <!-- Profile Overview: aggregate part-test stats & graphs -->
+            <hr class="section-divider" />
+            <div class="profile-overview-stats" id="profileOverviewStats">
+                <!-- filled by JS -->
+            </div>
+            <div class="profile-graphs-title"><i class="fa-solid fa-chart-simple"></i> Overall Performance (Part Tests)</div>
+            <div class="graph-grid" id="profileGraphGrid">
+                <div class="graph-card">
+                    <div class="graph-header"><div class="gh-title"><i class="fa-solid fa-chart-column"></i> Avg Subject Scores</div><span class="gh-badge">bar</span></div>
+                    <canvas id="profileBarChart" width="400" height="300"></canvas>
+                </div>
+                <div class="graph-card">
+                    <div class="graph-header"><div class="gh-title"><i class="fa-solid fa-chart-line"></i> Subject Trend</div><span class="gh-badge">line</span></div>
+                    <canvas id="profileLineChart" width="400" height="300"></canvas>
+                </div>
+                <div class="graph-card">
+                    <div class="graph-header"><div class="gh-title"><i class="fa-solid fa-chart-pie"></i> Score Distribution</div><span class="gh-badge">donut</span></div>
+                    <canvas id="profileDonutChart" width="400" height="300"></canvas>
+                </div>
+            </div>
+
             <button class="btn-ghost profile-logout" id="logoutBtn"><i class="fa-solid fa-right-from-bracket"></i> Log out</button>
         </div>
     </div>
@@ -1064,7 +1075,7 @@
         </div>
     </div>
 
-    <!-- ═══════════════ RESULT ═══════════════ -->
+    <!-- ═══════════════ RESULT (with graphs at bottom) ═══════════════ -->
     <div class="screen" id="resultScreen">
         <div class="overlay-header">
             <button class="icon-btn" data-back><i class="fa-solid fa-arrow-left"></i></button>
@@ -1086,6 +1097,24 @@
                 <div class="pc-tag"><i class="fa-solid fa-comment-dots"></i> Principal's remark</div>
                 <div class="pc-msg" id="princiMsg"></div>
             </div>
+
+            <!-- Test Analysis graphs (for this result) -->
+            <hr class="section-divider" />
+            <div class="profile-graphs-title"><i class="fa-solid fa-chart-simple"></i> Test Analysis</div>
+            <div class="graph-grid" id="resultGraphGrid">
+                <div class="graph-card">
+                    <div class="graph-header"><div class="gh-title"><i class="fa-solid fa-chart-column"></i> Subject Scores</div><span class="gh-badge">bar</span></div>
+                    <canvas id="resultBarChart" width="400" height="300"></canvas>
+                </div>
+                <div class="graph-card">
+                    <div class="graph-header"><div class="gh-title"><i class="fa-solid fa-chart-line"></i> Score Trend</div><span class="gh-badge">line</span></div>
+                    <canvas id="resultLineChart" width="400" height="300"></canvas>
+                </div>
+                <div class="graph-card">
+                    <div class="graph-header"><div class="gh-title"><i class="fa-solid fa-chart-pie"></i> Distribution</div><span class="gh-badge">donut</span></div>
+                    <canvas id="resultDonutChart" width="400" height="300"></canvas>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -1096,74 +1125,6 @@
             <h3>Time Table</h3>
         </div>
         <div class="overlay-body" id="timetableBody"></div>
-    </div>
-
-    <!-- ═══════════════ ANALYTICS (NEW) ═══════════════ -->
-    <div class="screen" id="analyticsScreen">
-        <div class="overlay-header">
-            <button class="icon-btn" data-back><i class="fa-solid fa-arrow-left"></i></button>
-            <h3>Test Analytics</h3>
-        </div>
-        <div class="overlay-body">
-
-            <!-- Data entry -->
-            <div class="analytics-entry-grid" id="analyticsEntryGrid">
-                <div class="field-block">
-                    <label class="field-mini-label">Physics</label>
-                    <input type="number" class="xin" id="scorePhysics" min="0" max="100" placeholder="0–100" value="78" />
-                </div>
-                <div class="field-block">
-                    <label class="field-mini-label">Chemistry</label>
-                    <input type="number" class="xin" id="scoreChemistry" min="0" max="100" placeholder="0–100" value="65" />
-                </div>
-                <div class="field-block">
-                    <label class="field-mini-label">Mathematics</label>
-                    <input type="number" class="xin" id="scoreMaths" min="0" max="100" placeholder="0–100" value="82" />
-                </div>
-                <div class="field-block">
-                    <label class="field-mini-label">Biology</label>
-                    <input type="number" class="xin" id="scoreBiology" min="0" max="100" placeholder="0–100" value="70" />
-                </div>
-                <div class="field-block" style="grid-column:1/-1;">
-                    <label class="field-mini-label">English</label>
-                    <input type="number" class="xin" id="scoreEnglish" min="0" max="100" placeholder="0–100" value="88" />
-                </div>
-            </div>
-
-            <div class="analytics-actions">
-                <button class="btn-solid" id="updateGraphsBtn"><i class="fa-solid fa-chart-line"></i> Update Graphs</button>
-                <button class="btn-ghost" id="resetScoresBtn" style="flex:0 0 auto;padding:12px 18px;margin-top:0;width:auto;"><i class="fa-solid fa-rotate-left"></i></button>
-            </div>
-
-            <!-- Three graphs -->
-            <div class="graph-grid">
-                <!-- 1. Bar chart -->
-                <div class="graph-card">
-                    <div class="graph-header">
-                        <div class="gh-title"><i class="fa-solid fa-chart-column"></i> Subject Scores</div>
-                        <span class="gh-badge">bar</span>
-                    </div>
-                    <canvas id="barChartCanvas" width="400" height="300"></canvas>
-                </div>
-                <!-- 2. Line chart -->
-                <div class="graph-card">
-                    <div class="graph-header">
-                        <div class="gh-title"><i class="fa-solid fa-chart-line"></i> Performance Trend</div>
-                        <span class="gh-badge">line</span>
-                    </div>
-                    <canvas id="lineChartCanvas" width="400" height="300"></canvas>
-                </div>
-                <!-- 3. Donut chart -->
-                <div class="graph-card">
-                    <div class="graph-header">
-                        <div class="gh-title"><i class="fa-solid fa-chart-pie"></i> Score Distribution</div>
-                        <span class="gh-badge">donut</span>
-                    </div>
-                    <canvas id="donutChartCanvas" width="400" height="300"></canvas>
-                </div>
-            </div>
-
-        </div>
     </div>
 
     <script>
@@ -1195,7 +1156,7 @@
            SCREEN ROUTER
            ══════════════════════════════════════════════════════════ */
         const SCREENS = ['loginScreen', 'dashboardScreen', 'profileScreen', 'examSelectScreen', 'rollEntryScreen',
-            'resultScreen', 'timetableScreen', 'analyticsScreen'
+            'resultScreen', 'timetableScreen'
         ];
 
         function showScreen(id, push) {
@@ -1203,8 +1164,10 @@
             document.getElementById(id).classList.add('active');
             window.scrollTo(0, 0);
             if (push !== false) { history.pushState({ screen: id }, '', '#' + id); }
-            // if entering analytics, draw graphs
-            if (id === 'analyticsScreen') { setTimeout(drawAllGraphs, 80); }
+            // if profile, load part-test overview and draw profile graphs
+            if (id === 'profileScreen') {
+                loadAndDrawProfileCharts();
+            }
         }
         window.addEventListener('popstate', (e) => {
             const id = (e.state && e.state.screen) || (isLoggedIn() ? 'dashboardScreen' : 'loginScreen');
@@ -1293,7 +1256,6 @@
         document.getElementById('checkResultBtn').addEventListener('click', () => openExamSelect());
         document.getElementById('timetableBtn').addEventListener('click', () => openTimetable());
         document.getElementById('fabAi').addEventListener('click', () => { window.location.href = './proton.html'; });
-        document.getElementById('analyticsBtn').addEventListener('click', () => { showScreen('analyticsScreen'); });
 
         /* ══════════════════════════════════════════════════════════
            PROFILE
@@ -1463,7 +1425,7 @@
         }
 
         /* ══════════════════════════════════════════════════════════
-           RESULT DISPLAY
+           RESULT DISPLAY + CHARTS
            ══════════════════════════════════════════════════════════ */
         function subjLabel(s) { return s.charAt(0) + s.slice(1).toLowerCase(); }
 
@@ -1500,6 +1462,15 @@
                     }
                 }
             }
+
+            // Draw result charts using the marks from this record
+            // We need subject names and scores
+            const subjects = dataset.subjects; // array of subject keys
+            const scores = subjects.map(subj => {
+                const m = record.marks[subj];
+                return (m && typeof m === 'object') ? m.total : m;
+            });
+            drawCharts('result', subjects, scores);
         }
 
         /* ══════════════════════════════════════════════════════════
@@ -1539,29 +1510,25 @@
 
         /* ══════════════════════════════════════════════════════════
            ══════════════════════════════════════════════════════════
-           ANALYTICS – GRAPH DRAWING
+           GRAPH DRAWING ENGINE (shared)
            ══════════════════════════════════════════════════════════
            ══════════════════════════════════════════════════════════ */
 
-        const SUBJECTS = ['Physics', 'Chemistry', 'Mathematics', 'Biology', 'English'];
-        const SUBJECT_IDS = ['scorePhysics', 'scoreChemistry', 'scoreMaths', 'scoreBiology', 'scoreEnglish'];
-        const COLORS = {
-            green: '#30d158',
-            red: '#ff453a',
-            white: '#ffffff',
-            dark: '#0a0a0a',
-            gray: '#8a8a8a',
-            lightGray: '#454545',
-            surface: '#111',
-            border: 'rgba(255,255,255,0.08)'
-        };
-
-        function getScoreValues() {
-            return SUBJECT_IDS.map(id => {
-                const el = document.getElementById(id);
-                const val = parseFloat(el.value);
-                return isNaN(val) ? 0 : Math.min(100, Math.max(0, val));
-            });
+        // roundRect polyfill
+        if (!CanvasRenderingContext2D.prototype.roundRect) {
+            CanvasRenderingContext2D.prototype.roundRect = function(x, y, w, h, radii) {
+                const r = typeof radii === 'number' ? radii : (radii ? radii[0] : 0) || 0;
+                this.moveTo(x + r, y);
+                this.lineTo(x + w - r, y);
+                this.quadraticCurveTo(x + w, y, x + w, y + r);
+                this.lineTo(x + w, y + h - r);
+                this.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+                this.lineTo(x + r, y + h);
+                this.quadraticCurveTo(x, y + h, x, y + h - r);
+                this.lineTo(x, y + r);
+                this.quadraticCurveTo(x, y, x + r, y);
+                return this;
+            };
         }
 
         function getThemeColors() {
@@ -1577,9 +1544,20 @@
             };
         }
 
-        /* ─── Bar Chart ─── */
-        function drawBarChart() {
-            const canvas = document.getElementById('barChartCanvas');
+        function drawCharts(prefix, labels, scores) {
+            // prefix: 'result' or 'profile'
+            const barId = prefix + 'BarChart';
+            const lineId = prefix + 'LineChart';
+            const donutId = prefix + 'DonutChart';
+
+            drawBarChart(barId, labels, scores);
+            drawLineChart(lineId, labels, scores);
+            drawDonutChart(donutId, labels, scores);
+        }
+
+        function drawBarChart(canvasId, labels, scores) {
+            const canvas = document.getElementById(canvasId);
+            if (!canvas) return;
             const ctx = canvas.getContext('2d');
             const rect = canvas.parentElement.getBoundingClientRect();
             const w = canvas.width = canvas.clientWidth || 400;
@@ -1591,121 +1569,31 @@
             canvas.style.height = h + 'px';
             ctx.scale(dpr, dpr);
 
-            const values = getScoreValues();
             const theme = getThemeColors();
             const pad = { top: 24, bottom: 36, left: 36, right: 16 };
             const chartW = w - pad.left - pad.right;
             const chartH = h - pad.top - pad.bottom;
-            const barCount = values.length;
+            const barCount = scores.length;
             const gap = 6;
             const barW = Math.min((chartW - gap * (barCount - 1)) / barCount, 40);
             const totalBarSpace = barW * barCount + gap * (barCount - 1);
             const offsetX = (chartW - totalBarSpace) / 2;
 
-            // Clear
-            ctx.clearRect(0, 0, w, h);
-
-            // Background
-            ctx.fillStyle = theme.bg;
-            ctx.fillRect(0, 0, w, h);
-
-            if (values.every(v => v === 0)) {
-                ctx.fillStyle = theme.textMuted;
-                ctx.font = '12px "DM Mono", monospace';
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
-                ctx.fillText('Enter scores to see the chart', w / 2, h / 2);
-                return;
-            }
-
-            const maxVal = Math.max(100, ...values);
-            const yScale = chartH / maxVal;
-
-            // Draw grid lines
-            ctx.strokeStyle = theme.border;
-            ctx.lineWidth = 0.5;
-            for (let i = 0; i <= 4; i++) {
-                const y = pad.top + chartH - (i / 4) * chartH;
-                ctx.beginPath();
-                ctx.moveTo(pad.left, y);
-                ctx.lineTo(w - pad.right, y);
-                ctx.stroke();
-                ctx.fillStyle = theme.textMuted;
-                ctx.font = '9px "DM Mono", monospace';
-                ctx.textAlign = 'right';
-                ctx.textBaseline = 'middle';
-                ctx.fillText(Math.round((i / 4) * maxVal), pad.left - 6, y);
-            }
-
-            // Bars
-            values.forEach((val, i) => {
-                const x = pad.left + offsetX + i * (barW + gap);
-                const barH = val * yScale;
-                const y = pad.top + chartH - barH;
-                const isGood = val >= 60;
-                const color = isGood ? theme.green : theme.red;
-
-                // Bar shadow / glow
-                ctx.shadowColor = isGood ? 'rgba(48,209,88,0.15)' : 'rgba(255,69,58,0.15)';
-                ctx.shadowBlur = 8;
-                ctx.fillStyle = color;
-                ctx.beginPath();
-                ctx.roundRect(x, y, barW, barH, [3, 3, 0, 0]);
-                ctx.fill();
-                ctx.shadowBlur = 0;
-
-                // Value on top
-                ctx.fillStyle = theme.text;
-                ctx.font = 'bold 10px "DM Mono", monospace';
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'bottom';
-                ctx.fillText(val, x + barW / 2, y - 4);
-
-                // Label
-                ctx.fillStyle = theme.textMuted;
-                ctx.font = '9px "DM Mono", monospace';
-                ctx.textBaseline = 'top';
-                const label = SUBJECTS[i].slice(0, 4);
-                ctx.fillText(label, x + barW / 2, pad.top + chartH + 6);
-            });
-        }
-
-        /* ─── Line Chart ─── */
-        function drawLineChart() {
-            const canvas = document.getElementById('lineChartCanvas');
-            const ctx = canvas.getContext('2d');
-            const rect = canvas.parentElement.getBoundingClientRect();
-            const w = canvas.width = canvas.clientWidth || 400;
-            const h = canvas.height = canvas.clientHeight || 300;
-            const dpr = window.devicePixelRatio || 1;
-            canvas.width = w * dpr;
-            canvas.height = h * dpr;
-            canvas.style.width = w + 'px';
-            canvas.style.height = h + 'px';
-            ctx.scale(dpr, dpr);
-
-            const values = getScoreValues();
-            const theme = getThemeColors();
-            const pad = { top: 28, bottom: 36, left: 36, right: 20 };
-            const chartW = w - pad.left - pad.right;
-            const chartH = h - pad.top - pad.bottom;
-
             ctx.clearRect(0, 0, w, h);
             ctx.fillStyle = theme.bg;
             ctx.fillRect(0, 0, w, h);
 
-            if (values.every(v => v === 0)) {
+            if (scores.every(v => v === 0) || scores.length === 0) {
                 ctx.fillStyle = theme.textMuted;
                 ctx.font = '12px "DM Mono", monospace';
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
-                ctx.fillText('Enter scores to see the chart', w / 2, h / 2);
+                ctx.fillText('No data available', w / 2, h / 2);
                 return;
             }
 
-            const maxVal = Math.max(100, ...values);
+            const maxVal = Math.max(100, ...scores);
             const yScale = chartH / maxVal;
-            const xStep = chartW / (values.length - 1 || 1);
 
             // Grid
             ctx.strokeStyle = theme.border;
@@ -1723,8 +1611,89 @@
                 ctx.fillText(Math.round((i / 4) * maxVal), pad.left - 6, y);
             }
 
-            // Line
-            const points = values.map((v, i) => ({
+            // Bars
+            scores.forEach((val, i) => {
+                const x = pad.left + offsetX + i * (barW + gap);
+                const barH = val * yScale;
+                const y = pad.top + chartH - barH;
+                const isGood = val >= 60;
+                const color = isGood ? theme.green : theme.red;
+
+                ctx.shadowColor = isGood ? 'rgba(48,209,88,0.15)' : 'rgba(255,69,58,0.15)';
+                ctx.shadowBlur = 8;
+                ctx.fillStyle = color;
+                ctx.beginPath();
+                ctx.roundRect(x, y, barW, barH, [3, 3, 0, 0]);
+                ctx.fill();
+                ctx.shadowBlur = 0;
+
+                ctx.fillStyle = theme.text;
+                ctx.font = 'bold 10px "DM Mono", monospace';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'bottom';
+                ctx.fillText(val, x + barW / 2, y - 4);
+
+                ctx.fillStyle = theme.textMuted;
+                ctx.font = '9px "DM Mono", monospace';
+                ctx.textBaseline = 'top';
+                const label = labels[i] ? labels[i].slice(0, 4) : '';
+                ctx.fillText(label, x + barW / 2, pad.top + chartH + 6);
+            });
+        }
+
+        function drawLineChart(canvasId, labels, scores) {
+            const canvas = document.getElementById(canvasId);
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const rect = canvas.parentElement.getBoundingClientRect();
+            const w = canvas.width = canvas.clientWidth || 400;
+            const h = canvas.height = canvas.clientHeight || 300;
+            const dpr = window.devicePixelRatio || 1;
+            canvas.width = w * dpr;
+            canvas.height = h * dpr;
+            canvas.style.width = w + 'px';
+            canvas.style.height = h + 'px';
+            ctx.scale(dpr, dpr);
+
+            const theme = getThemeColors();
+            const pad = { top: 28, bottom: 36, left: 36, right: 20 };
+            const chartW = w - pad.left - pad.right;
+            const chartH = h - pad.top - pad.bottom;
+
+            ctx.clearRect(0, 0, w, h);
+            ctx.fillStyle = theme.bg;
+            ctx.fillRect(0, 0, w, h);
+
+            if (scores.every(v => v === 0) || scores.length === 0) {
+                ctx.fillStyle = theme.textMuted;
+                ctx.font = '12px "DM Mono", monospace';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText('No data available', w / 2, h / 2);
+                return;
+            }
+
+            const maxVal = Math.max(100, ...scores);
+            const yScale = chartH / maxVal;
+            const xStep = chartW / (scores.length - 1 || 1);
+
+            // Grid
+            ctx.strokeStyle = theme.border;
+            ctx.lineWidth = 0.5;
+            for (let i = 0; i <= 4; i++) {
+                const y = pad.top + chartH - (i / 4) * chartH;
+                ctx.beginPath();
+                ctx.moveTo(pad.left, y);
+                ctx.lineTo(w - pad.right, y);
+                ctx.stroke();
+                ctx.fillStyle = theme.textMuted;
+                ctx.font = '9px "DM Mono", monospace';
+                ctx.textAlign = 'right';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(Math.round((i / 4) * maxVal), pad.left - 6, y);
+            }
+
+            const points = scores.map((v, i) => ({
                 x: pad.left + i * xStep,
                 y: pad.top + chartH - v * yScale
             }));
@@ -1741,7 +1710,7 @@
             ctx.closePath();
             ctx.fill();
 
-            // Line stroke
+            // Line
             ctx.strokeStyle = theme.green;
             ctx.lineWidth = 2.5;
             ctx.shadowColor = 'rgba(48,209,88,0.3)';
@@ -1753,11 +1722,10 @@
 
             // Points
             points.forEach((p, i) => {
-                const val = values[i];
+                const val = scores[i];
                 const isGood = val >= 60;
                 const color = isGood ? theme.green : theme.red;
 
-                // Glow
                 ctx.shadowColor = isGood ? 'rgba(48,209,88,0.3)' : 'rgba(255,69,58,0.3)';
                 ctx.shadowBlur = 12;
                 ctx.fillStyle = color;
@@ -1766,30 +1734,28 @@
                 ctx.fill();
                 ctx.shadowBlur = 0;
 
-                // Inner dot
                 ctx.fillStyle = theme.bg;
                 ctx.beginPath();
                 ctx.arc(p.x, p.y, 2.5, 0, Math.PI * 2);
                 ctx.fill();
 
-                // Value
                 ctx.fillStyle = theme.text;
                 ctx.font = 'bold 9px "DM Mono", monospace';
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'bottom';
                 ctx.fillText(val, p.x, p.y - 8);
 
-                // Label
                 ctx.fillStyle = theme.textMuted;
                 ctx.font = '8px "DM Mono", monospace';
                 ctx.textBaseline = 'top';
-                ctx.fillText(SUBJECTS[i].slice(0, 4), p.x, pad.top + chartH + 6);
+                const label = labels[i] ? labels[i].slice(0, 4) : '';
+                ctx.fillText(label, p.x, pad.top + chartH + 6);
             });
         }
 
-        /* ─── Donut Chart ─── */
-        function drawDonutChart() {
-            const canvas = document.getElementById('donutChartCanvas');
+        function drawDonutChart(canvasId, labels, scores) {
+            const canvas = document.getElementById(canvasId);
+            if (!canvas) return;
             const ctx = canvas.getContext('2d');
             const rect = canvas.parentElement.getBoundingClientRect();
             const w = canvas.width = canvas.clientWidth || 400;
@@ -1801,7 +1767,6 @@
             canvas.style.height = h + 'px';
             ctx.scale(dpr, dpr);
 
-            const values = getScoreValues();
             const theme = getThemeColors();
             const cx = w / 2;
             const cy = h / 2 - 4;
@@ -1812,28 +1777,24 @@
             ctx.fillStyle = theme.bg;
             ctx.fillRect(0, 0, w, h);
 
-            if (values.every(v => v === 0)) {
+            if (scores.every(v => v === 0) || scores.length === 0) {
                 ctx.fillStyle = theme.textMuted;
                 ctx.font = '12px "DM Mono", monospace';
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
-                ctx.fillText('Enter scores to see the chart', w / 2, h / 2);
+                ctx.fillText('No data available', w / 2, h / 2);
                 return;
             }
 
-            const total = values.reduce((a, b) => a + b, 0) || 1;
-            const maxPossible = values.length * 100;
+            const total = scores.reduce((a, b) => a + b, 0) || 1;
+            const maxPossible = scores.length * 100;
             const overallPct = (total / maxPossible) * 100;
 
-            // Donut slices: each subject's score as a fraction of total
-            const colors = [
-                '#30d158', '#ff453a', '#ff9f0a', '#0a84ff', '#bf5af2'
-            ];
+            const colors = ['#30d158', '#ff453a', '#ff9f0a', '#0a84ff', '#bf5af2'];
 
             let startAngle = -Math.PI / 2;
 
-            // Draw slices
-            values.forEach((val, i) => {
+            scores.forEach((val, i) => {
                 if (val === 0) return;
                 const sliceAngle = (val / total) * Math.PI * 2;
                 const endAngle = startAngle + sliceAngle;
@@ -1848,7 +1809,6 @@
                 ctx.fill();
                 ctx.shadowBlur = 0;
 
-                // Label
                 const midAngle = startAngle + sliceAngle / 2;
                 const labelR = radius + 18;
                 const lx = cx + Math.cos(midAngle) * labelR;
@@ -1864,7 +1824,7 @@
                 startAngle = endAngle;
             });
 
-            // Center circle with overall percentage
+            // Center
             ctx.shadowBlur = 0;
             ctx.fillStyle = theme.bg;
             ctx.beginPath();
@@ -1885,18 +1845,16 @@
             // Legend
             const legendY = h - 20;
             let legendX = 20;
-            const legendItems = SUBJECTS.map((s, i) => ({ label: s, color: colors[i % colors.length], val: values[i] }));
-            const visible = legendItems.filter(item => item.val > 0);
+            const visible = scores.map((val, i) => ({ label: labels[i] || '', color: colors[i % colors.length], val }))
+                .filter(item => item.val > 0);
             if (visible.length > 0) {
                 const totalLegendWidth = visible.reduce((acc, item) => acc + ctx.measureText(item.label).width + 24, 0);
                 legendX = (w - totalLegendWidth) / 2;
-
                 visible.forEach((item) => {
                     ctx.fillStyle = item.color;
                     ctx.beginPath();
                     ctx.arc(legendX + 4, legendY - 2, 4, 0, Math.PI * 2);
                     ctx.fill();
-
                     ctx.fillStyle = theme.textMuted;
                     ctx.font = '8px "DM Mono", monospace';
                     ctx.textAlign = 'left';
@@ -1907,63 +1865,80 @@
             }
         }
 
-        /* ─── RoundRect polyfill for canvas ─── */
-        if (!CanvasRenderingContext2D.prototype.roundRect) {
-            CanvasRenderingContext2D.prototype.roundRect = function(x, y, w, h, radii) {
-                const r = typeof radii === 'number' ? radii : (radii ? radii[0] : 0) || 0;
-                this.moveTo(x + r, y);
-                this.lineTo(x + w - r, y);
-                this.quadraticCurveTo(x + w, y, x + w, y + r);
-                this.lineTo(x + w, y + h - r);
-                this.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
-                this.lineTo(x + r, y + h);
-                this.quadraticCurveTo(x, y + h, x, y + h - r);
-                this.lineTo(x, y + r);
-                this.quadraticCurveTo(x, y, x + r, y);
-                return this;
-            };
+        /* ══════════════════════════════════════════════════════════
+           PROFILE – LOAD PART-TEST DATA & DRAW OVERVIEW CHARTS
+           ══════════════════════════════════════════════════════════ */
+        let partTestDataCache = null;
+
+        async function loadPartTestData() {
+            if (partTestDataCache) return partTestDataCache;
+            try {
+                const res = await fetch('./results_1pujeeparttest1.json');
+                if (!res.ok) throw new Error('missing');
+                const data = await res.json();
+                partTestDataCache = data;
+                return data;
+            } catch (e) {
+                partTestDataCache = null;
+                return null;
+            }
         }
 
-        /* ─── Master draw ─── */
-        function drawAllGraphs() {
-            drawBarChart();
-            drawLineChart();
-            drawDonutChart();
+        async function loadAndDrawProfileCharts() {
+            const s = getSession();
+            if (!s) return;
+            const data = await loadPartTestData();
+            const statsContainer = document.getElementById('profileOverviewStats');
+
+            if (!data || !data.results || data.results.length === 0) {
+                statsContainer.innerHTML =
+                    `<div class="stat-badge"><i class="fa-regular fa-circle-xmark"></i> No part‑test data available</div>`;
+                // show empty graphs
+                drawCharts('profile', ['—'], [0]);
+                return;
+            }
+
+            // Find all records for this student
+            const roll = s.rollNo.toLowerCase();
+            const records = data.results.filter(r => r.rollNo.toLowerCase() === roll);
+            if (records.length === 0) {
+                statsContainer.innerHTML =
+                    `<div class="stat-badge"><i class="fa-regular fa-circle-xmark"></i> No part‑tests found for this roll number</div>`;
+                drawCharts('profile', ['—'], [0]);
+                return;
+            }
+
+            // Compute average scores per subject
+            // Assume all records have the same subject list (use first record's keys)
+            const firstRecord = records[0];
+            const subjects = Object.keys(firstRecord.marks).filter(k => k !== 'total' && k !== 'percentage' && k !==
+            'grade');
+            const subjectAverages = subjects.map(subj => {
+                const sum = records.reduce((acc, rec) => {
+                    const val = rec.marks[subj];
+                    return acc + (typeof val === 'number' ? val : 0);
+                }, 0);
+                return Math.round(sum / records.length);
+            });
+
+            // Overall total and percentage (average of totals)
+            const avgTotal = Math.round(records.reduce((acc, r) => acc + (r.total || 0), 0) / records.length);
+            const avgPct = Math.round(records.reduce((acc, r) => acc + (r.percentage || 0), 0) / records.length);
+
+            // Display stats
+            statsContainer.innerHTML = `
+            <div class="stat-badge"><i class="fa-regular fa-file-lines"></i> Tests: <strong>${records.length}</strong></div>
+            <div class="stat-badge"><i class="fa-regular fa-star"></i> Avg Total: <strong>${avgTotal}</strong></div>
+            <div class="stat-badge"><i class="fa-regular fa-percent"></i> Avg %: <strong>${avgPct}%</strong></div>
+          `;
+
+            // Draw profile charts with subject averages
+            drawCharts('profile', subjects, subjectAverages);
         }
 
-        /* ─── Event wiring ─── */
-        document.getElementById('updateGraphsBtn').addEventListener('click', drawAllGraphs);
-
-        document.getElementById('resetScoresBtn').addEventListener('click', () => {
-            const defaults = [78, 65, 82, 70, 88];
-            SUBJECT_IDS.forEach((id, i) => {
-                document.getElementById(id).value = defaults[i];
-            });
-            drawAllGraphs();
-        });
-
-        // Auto-update on input change (live)
-        SUBJECT_IDS.forEach(id => {
-            document.getElementById(id).addEventListener('input', () => {
-                // debounce a bit
-                clearTimeout(window._analyticsTimer);
-                window._analyticsTimer = setTimeout(drawAllGraphs, 120);
-            });
-        });
-
-        // Also redraw on theme change
-        document.getElementById('darkToggle').addEventListener('change', () => {
-            setTimeout(drawAllGraphs, 100);
-        });
-
-        // Redraw on resize
-        let resizeTimer;
-        window.addEventListener('resize', () => {
-            clearTimeout(resizeTimer);
-            resizeTimer = setTimeout(drawAllGraphs, 150);
-        });
-
-        /* ─── INIT ─── */
+        /* ══════════════════════════════════════════════════════════
+           INIT
+           ══════════════════════════════════════════════════════════ */
         (function init() {
             if (isLoggedIn()) {
                 applyDashboard();
@@ -1973,7 +1948,6 @@
                 showScreen('loginScreen', false);
                 history.replaceState({ screen: 'loginScreen' }, '', '#loginScreen');
             }
-            // Pre-draw analytics with defaults (will draw when screen is shown)
         })();
     </script>
 </body>
