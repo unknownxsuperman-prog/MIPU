@@ -80,7 +80,7 @@ body{
 .princi-line{ margin-top:12px; padding-top:12px; border-top:1px solid var(--border); font-size:.78rem; line-height:1.55; color:var(--text-1); }
 .princi-line .pl-tag{ font-family:var(--font-m); font-size:.5rem; color:var(--text-3); letter-spacing:.1em; text-transform:uppercase; display:block; margin-bottom:6px; }
 
-/* ─── Graph styles (integrated from main portal) ─── */
+/* ─── Graph styles ─── */
 .graph-grid {
   display: grid;
   grid-template-columns: 1fr;
@@ -216,7 +216,7 @@ body{
   <div class="empty-hero" id="emptyHero">
     <i class="fa-solid fa-wand-magic-sparkles"></i>
     <div class="eh-title" id="heroGreeting">Hey there</div>
-    <div class="eh-sub">Pick a test below or type your query</div>
+    <div class="eh-sub">Click a pill below to check your result with analysis</div>
   </div>
   <div id="chatBody" style="display:none;"></div>
 </div>
@@ -226,7 +226,7 @@ body{
     <div class="cmd-pill" data-cat="jee"><i class="fa-solid fa-award"></i> NEET / JEE</div>
     <div class="cmd-pill" data-cat="kcet"><i class="fa-solid fa-award"></i> KCET</div>
     <div class="cmd-pill" data-cat="boards"><i class="fa-solid fa-award"></i> Boards</div>
-    <!-- NEW: Part Test 1 pill -->
+    <!-- Part Test 1 pill – triggers result + graphs like the result page -->
     <div class="cmd-pill" data-cat="parttest1"><i class="fa-solid fa-flask"></i> Part Test 1</div>
   </div>
   <div class="composer-box">
@@ -440,7 +440,7 @@ async function fetchAndRenderResult(exam, roll){
 
 function subjLabel(s){ return s.charAt(0)+s.slice(1).toLowerCase(); }
 
-// ─── Graph drawing functions (copied from main portal) ──────────────────
+// ─── Graph drawing functions (same as result page) ─────────────────────
 
 function getThemeColors() {
   const isDark = document.documentElement.getAttribute('data-theme') !== 'light';
@@ -455,7 +455,6 @@ function getThemeColors() {
   };
 }
 
-// roundRect polyfill
 if (!CanvasRenderingContext2D.prototype.roundRect) {
   CanvasRenderingContext2D.prototype.roundRect = function(x, y, w, h, radii) {
     const r = typeof radii === 'number' ? radii : (radii ? radii[0] : 0) || 0;
@@ -779,21 +778,19 @@ function drawDonutChart(canvasId, labels, scores) {
   }
 }
 
-// ─── Enhanced result rendering with graphs ──────────────────────────────
+// ─── Result card with graphs (exactly like result page) ────────────────
 
 async function renderResultCard(dataset, record, exam){
-  // Extract subjects: if dataset has subjects array, use it; else get keys from marks (excluding special keys)
+  // Extract subjects
   let subjects = dataset.subjects;
   if (!subjects || subjects.length === 0) {
     subjects = Object.keys(record.marks).filter(k => !['total','percentage','grade','rank'].includes(k.toLowerCase()));
   }
-  // Get scores for each subject
   const scores = subjects.map(subj => {
     const m = record.marks[subj];
     return (m && typeof m === 'object') ? m.total : m;
   });
 
-  // Build result HTML
   let princiHtml = '';
   if(exam.princiMsgFile){
     const msgs = await loadJson(exam.princiMsgFile);
@@ -805,7 +802,6 @@ async function renderResultCard(dataset, record, exam){
     }
   }
 
-  // Generate unique IDs for canvas elements
   const uid = 'pt_' + Date.now() + '_';
   const barId = uid + 'bar';
   const lineId = uid + 'line';
@@ -849,8 +845,7 @@ async function renderResultCard(dataset, record, exam){
 
   const row = protonSays(html, `${record.name} · ${exam.shortName} · Total ${record.total} · Rank #${record.rank}`);
 
-  // After the HTML is rendered, draw the charts
-  // Use requestAnimationFrame to ensure DOM is updated
+  // Draw graphs after DOM update
   requestAnimationFrame(() => {
     setTimeout(() => {
       drawCharts(uid, subjects, scores);
@@ -858,7 +853,7 @@ async function renderResultCard(dataset, record, exam){
   });
 }
 
-// ─── Part Test 1 flow ────────────────────────────────────────────────────
+// ─── Part Test 1 flow (clickable pill) ──────────────────────────────────
 
 async function startPartTest1Flow(){
   protonSays(loadingLine('Loading Part Test 1…'));
@@ -870,19 +865,17 @@ async function startPartTest1Flow(){
     protonSays(`<i class="fa-regular fa-folder-open"></i> No Part Test 1 data available.`);
     return;
   }
-  // Extract subjects from first record
+  // Build exam object dynamically from the first record
   const first = data.results[0];
   const subjects = Object.keys(first.marks).filter(k => !['total','percentage','grade','rank'].includes(k.toLowerCase()));
-  // Build exam object
   const exam = {
     shortName: 'Part Test 1',
     displayName: 'Part Test 1',
     resultsFile: 'results_1pujeeparttest1.json',
     subjects: subjects,
-    maxPerSubject: 100, // assume 100
+    maxPerSubject: 100,
     princiMsgFile: null
   };
-  // Store subjects in exam for later use
   exam._subjects = subjects;
   askForRoll(exam);
 }
@@ -895,7 +888,6 @@ async function tryParseResultIntent(text){
   else if(/kcet/.test(t)) category = 'kcet';
   else if(/board/.test(t)) category = 'boards';
   else if(/part test/.test(t)) { 
-    // direct part test request
     userSays(text);
     startPartTest1Flow();
     return true;
