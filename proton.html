@@ -388,6 +388,7 @@ async function startCategoryFlow(category){
   row.querySelectorAll('[data-code]').forEach(chip=>{
     chip.addEventListener('click', ()=>{
       const exam = data.exams.find(e=>e.code===chip.getAttribute('data-code'));
+      exam._category = category;
       userSays(exam.shortName);
       askForRoll(exam);
     });
@@ -440,355 +441,13 @@ async function fetchAndRenderResult(exam, roll){
 
 function subjLabel(s){ return s.charAt(0)+s.slice(1).toLowerCase(); }
 
-// ─── Graph drawing functions ─────────────────────────────────────────────
-
-function getThemeColors() {
-  const isDark = document.documentElement.getAttribute('data-theme') !== 'light';
-  return {
-    bg: isDark ? '#0a0a0a' : '#ffffff',
-    text: isDark ? '#ffffff' : '#0a0a0a',
-    textMuted: isDark ? '#8a8a8a' : '#6b6b6f',
-    border: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)',
-    green: '#30d158',
-    red: '#ff453a',
-    surface: isDark ? '#111' : '#f0f0f2',
-  };
-}
-
-if (!CanvasRenderingContext2D.prototype.roundRect) {
-  CanvasRenderingContext2D.prototype.roundRect = function(x, y, w, h, radii) {
-    const r = typeof radii === 'number' ? radii : (radii ? radii[0] : 0) || 0;
-    this.moveTo(x + r, y);
-    this.lineTo(x + w - r, y);
-    this.quadraticCurveTo(x + w, y, x + w, y + r);
-    this.lineTo(x + w, y + h - r);
-    this.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
-    this.lineTo(x + r, y + h);
-    this.quadraticCurveTo(x, y + h, x, y + h - r);
-    this.lineTo(x, y + r);
-    this.quadraticCurveTo(x, y, x + r, y);
-    return this;
-  };
-}
-
-function drawCharts(prefix, labels, scores) {
-  drawBarChart(prefix + 'Bar', labels, scores);
-  drawLineChart(prefix + 'Line', labels, scores);
-  drawDonutChart(prefix + 'Donut', labels, scores);
-}
-
-function drawBarChart(canvasId, labels, scores) {
-  const canvas = document.getElementById(canvasId);
-  if (!canvas) return;
-  const ctx = canvas.getContext('2d');
-  const rect = canvas.parentElement.getBoundingClientRect();
-  const w = canvas.width = canvas.clientWidth || 400;
-  const h = canvas.height = canvas.clientHeight || 300;
-  const dpr = window.devicePixelRatio || 1;
-  canvas.width = w * dpr;
-  canvas.height = h * dpr;
-  canvas.style.width = w + 'px';
-  canvas.style.height = h + 'px';
-  ctx.scale(dpr, dpr);
-
-  const theme = getThemeColors();
-  const pad = { top: 24, bottom: 36, left: 36, right: 16 };
-  const chartW = w - pad.left - pad.right;
-  const chartH = h - pad.top - pad.bottom;
-  const barCount = scores.length;
-  const gap = 6;
-  const barW = Math.min((chartW - gap * (barCount - 1)) / barCount, 40);
-  const totalBarSpace = barW * barCount + gap * (barCount - 1);
-  const offsetX = (chartW - totalBarSpace) / 2;
-
-  ctx.clearRect(0, 0, w, h);
-  ctx.fillStyle = theme.bg;
-  ctx.fillRect(0, 0, w, h);
-
-  if (scores.every(v => v === 0) || scores.length === 0) {
-    ctx.fillStyle = theme.textMuted;
-    ctx.font = '12px "DM Mono", monospace';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText('No data', w / 2, h / 2);
-    return;
-  }
-
-  const maxVal = Math.max(100, ...scores);
-  const yScale = chartH / maxVal;
-
-  ctx.strokeStyle = theme.border;
-  ctx.lineWidth = 0.5;
-  for (let i = 0; i <= 4; i++) {
-    const y = pad.top + chartH - (i / 4) * chartH;
-    ctx.beginPath();
-    ctx.moveTo(pad.left, y);
-    ctx.lineTo(w - pad.right, y);
-    ctx.stroke();
-    ctx.fillStyle = theme.textMuted;
-    ctx.font = '9px "DM Mono", monospace';
-    ctx.textAlign = 'right';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(Math.round((i / 4) * maxVal), pad.left - 6, y);
-  }
-
-  scores.forEach((val, i) => {
-    const x = pad.left + offsetX + i * (barW + gap);
-    const barH = val * yScale;
-    const y = pad.top + chartH - barH;
-    const isGood = val >= 60;
-    const color = isGood ? theme.green : theme.red;
-
-    ctx.shadowColor = isGood ? 'rgba(48,209,88,0.15)' : 'rgba(255,69,58,0.15)';
-    ctx.shadowBlur = 8;
-    ctx.fillStyle = color;
-    ctx.beginPath();
-    ctx.roundRect(x, y, barW, barH, [3, 3, 0, 0]);
-    ctx.fill();
-    ctx.shadowBlur = 0;
-
-    ctx.fillStyle = theme.text;
-    ctx.font = 'bold 10px "DM Mono", monospace';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'bottom';
-    ctx.fillText(val, x + barW / 2, y - 4);
-
-    ctx.fillStyle = theme.textMuted;
-    ctx.font = '9px "DM Mono", monospace';
-    ctx.textBaseline = 'top';
-    const label = labels[i] ? labels[i].slice(0, 4) : '';
-    ctx.fillText(label, x + barW / 2, pad.top + chartH + 6);
-  });
-}
-
-function drawLineChart(canvasId, labels, scores) {
-  const canvas = document.getElementById(canvasId);
-  if (!canvas) return;
-  const ctx = canvas.getContext('2d');
-  const rect = canvas.parentElement.getBoundingClientRect();
-  const w = canvas.width = canvas.clientWidth || 400;
-  const h = canvas.height = canvas.clientHeight || 300;
-  const dpr = window.devicePixelRatio || 1;
-  canvas.width = w * dpr;
-  canvas.height = h * dpr;
-  canvas.style.width = w + 'px';
-  canvas.style.height = h + 'px';
-  ctx.scale(dpr, dpr);
-
-  const theme = getThemeColors();
-  const pad = { top: 28, bottom: 36, left: 36, right: 20 };
-  const chartW = w - pad.left - pad.right;
-  const chartH = h - pad.top - pad.bottom;
-
-  ctx.clearRect(0, 0, w, h);
-  ctx.fillStyle = theme.bg;
-  ctx.fillRect(0, 0, w, h);
-
-  if (scores.every(v => v === 0) || scores.length === 0) {
-    ctx.fillStyle = theme.textMuted;
-    ctx.font = '12px "DM Mono", monospace';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText('No data', w / 2, h / 2);
-    return;
-  }
-
-  const maxVal = Math.max(100, ...scores);
-  const yScale = chartH / maxVal;
-  const xStep = chartW / (scores.length - 1 || 1);
-
-  ctx.strokeStyle = theme.border;
-  ctx.lineWidth = 0.5;
-  for (let i = 0; i <= 4; i++) {
-    const y = pad.top + chartH - (i / 4) * chartH;
-    ctx.beginPath();
-    ctx.moveTo(pad.left, y);
-    ctx.lineTo(w - pad.right, y);
-    ctx.stroke();
-    ctx.fillStyle = theme.textMuted;
-    ctx.font = '9px "DM Mono", monospace';
-    ctx.textAlign = 'right';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(Math.round((i / 4) * maxVal), pad.left - 6, y);
-  }
-
-  const points = scores.map((v, i) => ({
-    x: pad.left + i * xStep,
-    y: pad.top + chartH - v * yScale
-  }));
-
-  const grad = ctx.createLinearGradient(0, pad.top, 0, pad.top + chartH);
-  grad.addColorStop(0, 'rgba(48,209,88,0.25)');
-  grad.addColorStop(1, 'rgba(48,209,88,0.01)');
-  ctx.fillStyle = grad;
-  ctx.beginPath();
-  ctx.moveTo(points[0].x, pad.top + chartH);
-  points.forEach(p => ctx.lineTo(p.x, p.y));
-  ctx.lineTo(points[points.length - 1].x, pad.top + chartH);
-  ctx.closePath();
-  ctx.fill();
-
-  ctx.strokeStyle = theme.green;
-  ctx.lineWidth = 2.5;
-  ctx.shadowColor = 'rgba(48,209,88,0.3)';
-  ctx.shadowBlur = 10;
-  ctx.beginPath();
-  points.forEach((p, i) => { i === 0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y); });
-  ctx.stroke();
-  ctx.shadowBlur = 0;
-
-  points.forEach((p, i) => {
-    const val = scores[i];
-    const isGood = val >= 60;
-    const color = isGood ? theme.green : theme.red;
-
-    ctx.shadowColor = isGood ? 'rgba(48,209,88,0.3)' : 'rgba(255,69,58,0.3)';
-    ctx.shadowBlur = 12;
-    ctx.fillStyle = color;
-    ctx.beginPath();
-    ctx.arc(p.x, p.y, 5, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.shadowBlur = 0;
-
-    ctx.fillStyle = theme.bg;
-    ctx.beginPath();
-    ctx.arc(p.x, p.y, 2.5, 0, Math.PI * 2);
-    ctx.fill();
-
-    ctx.fillStyle = theme.text;
-    ctx.font = 'bold 9px "DM Mono", monospace';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'bottom';
-    ctx.fillText(val, p.x, p.y - 8);
-
-    ctx.fillStyle = theme.textMuted;
-    ctx.font = '8px "DM Mono", monospace';
-    ctx.textBaseline = 'top';
-    const label = labels[i] ? labels[i].slice(0, 4) : '';
-    ctx.fillText(label, p.x, pad.top + chartH + 6);
-  });
-}
-
-function drawDonutChart(canvasId, labels, scores) {
-  const canvas = document.getElementById(canvasId);
-  if (!canvas) return;
-  const ctx = canvas.getContext('2d');
-  const rect = canvas.parentElement.getBoundingClientRect();
-  const w = canvas.width = canvas.clientWidth || 400;
-  const h = canvas.height = canvas.clientHeight || 300;
-  const dpr = window.devicePixelRatio || 1;
-  canvas.width = w * dpr;
-  canvas.height = h * dpr;
-  canvas.style.width = w + 'px';
-  canvas.style.height = h + 'px';
-  ctx.scale(dpr, dpr);
-
-  const theme = getThemeColors();
-  const cx = w / 2;
-  const cy = h / 2 - 4;
-  const radius = Math.min(w, h) * 0.35;
-  const innerRadius = radius * 0.55;
-
-  ctx.clearRect(0, 0, w, h);
-  ctx.fillStyle = theme.bg;
-  ctx.fillRect(0, 0, w, h);
-
-  if (scores.every(v => v === 0) || scores.length === 0) {
-    ctx.fillStyle = theme.textMuted;
-    ctx.font = '12px "DM Mono", monospace';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText('No data', w / 2, h / 2);
-    return;
-  }
-
-  const total = scores.reduce((a, b) => a + b, 0) || 1;
-  const maxPossible = scores.length * 100;
-  const overallPct = (total / maxPossible) * 100;
-
-  const colors = ['#30d158', '#ff453a', '#ff9f0a', '#0a84ff', '#bf5af2'];
-  let startAngle = -Math.PI / 2;
-
-  scores.forEach((val, i) => {
-    if (val === 0) return;
-    const sliceAngle = (val / total) * Math.PI * 2;
-    const endAngle = startAngle + sliceAngle;
-
-    ctx.beginPath();
-    ctx.arc(cx, cy, radius, startAngle, endAngle);
-    ctx.arc(cx, cy, innerRadius, endAngle, startAngle, true);
-    ctx.closePath();
-    ctx.fillStyle = colors[i % colors.length];
-    ctx.shadowColor = 'rgba(0,0,0,0.15)';
-    ctx.shadowBlur = 6;
-    ctx.fill();
-    ctx.shadowBlur = 0;
-
-    const midAngle = startAngle + sliceAngle / 2;
-    const labelR = radius + 18;
-    const lx = cx + Math.cos(midAngle) * labelR;
-    const ly = cy + Math.sin(midAngle) * labelR;
-    const pct = Math.round((val / total) * 100);
-    if (pct > 3) {
-      ctx.fillStyle = theme.text;
-      ctx.font = 'bold 8px "DM Mono", monospace';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillText(`${pct}%`, lx, ly);
-    }
-    startAngle = endAngle;
-  });
-
-  ctx.shadowBlur = 0;
-  ctx.fillStyle = theme.bg;
-  ctx.beginPath();
-  ctx.arc(cx, cy, innerRadius * 0.75, 0, Math.PI * 2);
-  ctx.fill();
-
-  ctx.fillStyle = theme.text;
-  ctx.font = 'bold 18px "Space Grotesk", sans-serif';
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  ctx.fillText(`${Math.round(overallPct)}%`, cx, cy - 4);
-
-  ctx.fillStyle = theme.textMuted;
-  ctx.font = '7px "DM Mono", monospace';
-  ctx.textBaseline = 'top';
-  ctx.fillText('OVERALL', cx, cy + 12);
-
-  const legendY = h - 20;
-  let legendX = 20;
-  const visible = scores.map((val, i) => ({ label: labels[i] || '', color: colors[i % colors.length], val }))
-    .filter(item => item.val > 0);
-  if (visible.length > 0) {
-    const totalLegendWidth = visible.reduce((acc, item) => acc + ctx.measureText(item.label).width + 24, 0);
-    legendX = (w - totalLegendWidth) / 2;
-    visible.forEach((item) => {
-      ctx.fillStyle = item.color;
-      ctx.beginPath();
-      ctx.arc(legendX + 4, legendY - 2, 4, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.fillStyle = theme.textMuted;
-      ctx.font = '8px "DM Mono", monospace';
-      ctx.textAlign = 'left';
-      ctx.textBaseline = 'middle';
-      ctx.fillText(item.label, legendX + 12, legendY);
-      legendX += ctx.measureText(item.label).width + 24;
-    });
-  }
-}
-
-// ─── Result card with graphs and "See Full Analysis" button ────────────
+// ─── Result card with "See Full Analysis" button (deep-links to index.html) ────────────
 
 async function renderResultCard(dataset, record, exam){
   let subjects = dataset.subjects;
   if (!subjects || subjects.length === 0) {
     subjects = Object.keys(record.marks).filter(k => !['total','percentage','grade','rank'].includes(k.toLowerCase()));
   }
-  const scores = subjects.map(subj => {
-    const m = record.marks[subj];
-    return (m && typeof m === 'object') ? m.total : m;
-  });
 
   let princiHtml = '';
   if(exam.princiMsgFile){
@@ -801,15 +460,18 @@ async function renderResultCard(dataset, record, exam){
     }
   }
 
-  const uid = 'pt_' + Date.now() + '_';
-  const barId = uid + 'bar';
-  const lineId = uid + 'line';
-  const donutId = uid + 'donut';
+  // Build a deep-link back to the main portal so "See Full Analysis" always resolves
+  // to the right exam + roll, whether it's a category exam (jee/kcet/boards) or Part Test 1.
+  let analysisHref;
+  if (exam._category && exam.code) {
+    analysisHref = `./index.html?cat=${encodeURIComponent(exam._category)}&code=${encodeURIComponent(exam.code)}&roll=${encodeURIComponent(record.rollNo)}`;
+  } else {
+    analysisHref = `./index.html?file=${encodeURIComponent(exam.resultsFile)}&roll=${encodeURIComponent(record.rollNo)}&title=${encodeURIComponent(exam.shortName)}`;
+  }
 
-  // Build the result card HTML (same as before) but add a "See Full Analysis" button
   const analysisBtn = `
     <div style="margin-top:16px;display:flex;justify-content:center;">
-      <a href="./index.html?test=${encodeURIComponent(exam.displayName)}&roll=${encodeURIComponent(record.rollNo)}" 
+      <a href="${analysisHref}" 
          class="btn-solid" style="width:auto;padding:12px 24px;text-decoration:none;display:inline-flex;align-items:center;gap:8px;">
         <i class="fa-solid fa-chart-simple"></i> See Full Analysis
       </a>
@@ -837,30 +499,9 @@ async function renderResultCard(dataset, record, exam){
     </div>
     ${princiHtml}
     ${analysisBtn}
-    <div class="graph-grid">
-      <div class="graph-card">
-        <div class="graph-header"><div class="gh-title"><i class="fa-solid fa-chart-column"></i> Subject Scores</div><span class="gh-badge">bar</span></div>
-        <canvas id="${barId}" width="400" height="300"></canvas>
-      </div>
-      <div class="graph-card">
-        <div class="graph-header"><div class="gh-title"><i class="fa-solid fa-chart-line"></i> Score Trend</div><span class="gh-badge">line</span></div>
-        <canvas id="${lineId}" width="400" height="300"></canvas>
-      </div>
-      <div class="graph-card">
-        <div class="graph-header"><div class="gh-title"><i class="fa-solid fa-chart-pie"></i> Distribution</div><span class="gh-badge">donut</span></div>
-        <canvas id="${donutId}" width="400" height="300"></canvas>
-      </div>
-    </div>
   `;
 
-  const row = protonSays(html, `${record.name} · ${exam.shortName} · Total ${record.total} · Rank #${record.rank}`);
-
-  // Draw graphs after DOM update
-  requestAnimationFrame(() => {
-    setTimeout(() => {
-      drawCharts(uid, subjects, scores);
-    }, 50);
-  });
+  protonSays(html, `${record.name} · ${exam.shortName} · Total ${record.total} · Rank #${record.rank}`);
 }
 
 // ─── Part Test 1 flow (clickable pill) ──────────────────────────────────
@@ -908,7 +549,7 @@ async function tryParseResultIntent(text){
     if(data && data.exams){
       for(const ex of data.exams){
         const codeRe = new RegExp('\\b' + ex.code.toLowerCase() + '\\b');
-        if(codeRe.test(t)){ askForRoll(ex); return true; }
+        if(codeRe.test(t)){ ex._category = category; askForRoll(ex); return true; }
       }
     }
     await startCategoryFlow(category);
